@@ -1,0 +1,242 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	  html {
+		font-family: GillSans, Calibri, Trebuchet, sans-serif;
+	  }
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+	#logo{
+		font-family:godoMaum;
+		margin-top:0; 
+		color:#ffffff;
+		font-size:80px;
+	}
+   </style>
+   <script>
+	$( document ).ready(function(){
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+		$(".slider").slider({
+			height:140,
+			indicators:false
+		});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		$(".button-collapse").sideNav(); 
+    });
+   </script>
+   
+   <body>
+		<header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+   
+		<div class="card" > 
+			<div class="center-align" style="font-size:25px; font-weight:bolder; margin-top:20px; margin-bottom:10px" >텍스 리펀</div>
+			<div class="card-content" style="padding-top:0px;">
+				<div class="row">
+					<div class="col s12">
+						<div class="card cyan lighten-5">
+							<div class="card-content black-text">
+								<blockquote style="font-size:20px;">텍스리펀이란?</blockquote>
+								<p>
+										텍스리펀드란 해외 부가가치세 환급 제도란 자국에서 소비되지 않은 물건에 대한 부가가치세를 환급해주는 제도입니다.<br>
+										부가가치세가 있는 외국에서 물건을 구매할 경우, 거의 모든 상품의 소비자 가격에는 부가가치세가 포함되어 있지만, 외국인 관광객이 구매품을 소지하고 출국을 한다면 동 부가가치세가 적용되지 않으므로 일정 절차만 거치면 외국에서 구입한 물건에 부과되어 있는 부가가치세를 돌려받을 수 있습니다.<br>
+										단, 모든 국가에서 적용되는 것은 아니고 캐나다, 유럽 등 약 50개국 이상 국가의 약 40만 개 상점에서만 가능합니다. 또한, 국가별로 최저구입금액 범위가 있고, 상점별로 일정 금액 이상을 구매하는 조건이 있을 수 있으므로 매장 직원을 통해 이를 확인할 필요가 있습니다.<br>
+									</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> 
+		<div class="card" > 
+			<div class="card-content" style=" padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+						<div class="card cyan lighten-5">
+							<div class="card-content black-text">
+								<blockquote style="font-size:20px;">환급절차</blockquote>
+								<p>1. 카드</p><br>
+								<span style="margin:10px">
+									매장에서 환급서류(카드로 환급받을 경우에는 카드번호를, 수표로 받을 때는 한국의 집 주소를 영문으로 정확히 기입)를 작성합니다. 
+									점원이 주는 환급서류(2장)를 보관했다가 공항에서 체크인하기 전에 물품들과 서류를 세관에 보여주고 출국증명 스탬프를 받습니다.
+								</span><br>
+								<p>2. 현금</p><br>
+								<span style="margin:10px">
+									매장에서 환급서류를 작성한 뒤, 점원이 주는 환급서류(2장)를 보관했다가 공항에서 체크인하기 전 물품들과 서류를 세관에 보여주고 출국증명 스탬프를 받으면 
+									공항 내 지정장소에서 수수료를 제외한 현금으로 곧바로 환급 받을 수 있습니다.
+								</span>
+								<blockquote style="font-size:20px;">환급방법</blockquote>
+<!-- ================================================줄정렬 필요============================================================ -->
+								<p>● 백화점, 상점 등 쇼핑한 인근에서<br>
+									1. Tax Free등의 로고가 있는지 확인합니다. 대형<br><span style="margin:15px">매장의 경우 로고가 없어도 되는 경우가 있으<br><span style="margin:15px">므로 매장직원에게 직접 물어보며 환급 여부<br><span style="margin:15px">를 확인한다. 이때 최소금액이 얼마인지도 함<br><span style="margin:15px">께 확인합니다.</span></span></span></span><br>
+									2. 환급방법은<br>
+								<span style="margin:15px">① 간혹 현금, 카드 구분 없이 물품대금 결제 <br><span style="margin:15px">시 환급분을 빼고(VAT off Service) 결제하는 <br><span style="margin:15px">곳이 있는데, 이 경우는 사후 환급의 번거로움<br><span style="margin:15px">이 없습니다. 카드 환급의 경우는 해당 상점에<br><span style="margin:15px">서 받은 환급서류의 봉투에 공항 세관의 스탬<br><span style="margin:15px">프를 받은 후 인근에 비치된 우체통에 그 봉투<br><span style="margin:15px">를 넣으면 처리가 완료됩니다.</span></span></span></span></span></span><br>
+						<span style="margin:15px">②	대개의 경우, 물품대금을 전액 결제한 후, <br><span style="margin:15px">지정 환급소(공항이나 시내 쇼핑타운 등에 <br><span style="margin:15px">있는 환급대행사의 환급카운터 등)에서 별도<br><span style="margin:15px">의 환급을 받을 수 있도록 하고 <br><span style="margin:15px">있습니다.</span></span></span></span><br>
+						3. Tax Free라는 로고가 있는 상점에서 물건을 <br><span style="margin:15px">구매하면 직원이 부가세 환급전표(tax refund<br><span style="margin:15px"> cheque)를 작성해 주는데(본인이 작성해야 할 <br><span style="margin:15px">때도 있음), 일부 국가의 상점에서는 환급전표 <br><span style="margin:15px">대신 영수증에 직원의 싸인을 받은 후 빈칸을 <br><span style="margin:15px">채워서 사용할 때도 있습니다.</span></span></span></span></span><br>
+						<span style="margin:15px">이때 원칙적으로 여권을 보여주어 신분을 확<br><span style="margin:15px">인토록 합니다. 국가별로 상이하지만, 환급전<br><span style="margin:15px">표는 발행일이나 발행월부터 2개월 ~ 무제한<br><span style="margin:15px">까지 등 그 유효기간이 다양합니다.</span></span></span></span>
+
+						<br>4. 대개의 경우 환급전표는 2장으로 먹지 처리가 <br><span style="margin:15px">되어 있어 앞장(흰색 또는 빨간색)만 쓰면 뒷<br><span style="margin:15px">장(파란색 또는 초록색)에도 기재가 됩니다. <br><span style="margin:15px">이 서류에는 제품명, 구입날짜, 이름, 여권번호, <br><span style="margin:15px">가격, 환급받을 방법(카드 or 현금), 환급액 등<br><span style="margin:15px">을 기재합니다.</span></span></span></span></span></br>
+						<span style="margin:15px">앞장은 환급을 위한 제출서류로 사용되고, 뒷<br><span style="margin:15px">장은 본인이 보관하고 있다가 Tax Refund가<br><span style="margin:15px"> 정상적으로 이루어지지 않을 때 증빙서류로<br><span style="margin:15px"> 사용할 수 있습니다. 간혹 환급전표가1장인 <br><span style="margin:15px">경우는 제출용으로 사용하기 전에 사진으로 <br><span style="margin:15px">찍어 보관할 수도 있습니다.</span></span></span></span></span></span></span>
+
+						5. 현금으로 환급 받을 경우, 환급액의 6~10% <br><span style="margin:15px">수수료를 공제한 후 현장(시내 사무소 또는 상<br><span style="margin:15px">점)에서 환급 받을 수 있고, 카드로 환급 받을<br><span style="margin:15px"> 경우 신청용지(앞장)를 동봉하여 우편으로 발<br><span style="margin:15px">송하면 결제통장으로 약 1~2 개월 뒤에 수<br><span style="margin:15px">수료 공제 없이 환급액 전액이 입금됩니다.<br></span></span><span></span></span>
+
+						<span style="margin:15px">이때 우표는 본인이 직접 사서 <br><span style="margin:15px">붙여야 합니다.</span></span>
+
+						<br>● 공항에서
+
+						<br>1. 일부 국가에서는 짐을 먼저 부쳐야만 세관에<span style="margin:15px"> 들어갈 수 있는 경우도 있으므로, 출국하는 날<span style="margin:15px"> 공항에서 세관(Custom)과 환급소(Tax refund</span><br><span style="margin:15px"> office)의 위치를 먼저 확인하도록 합니다. </span><br><span style="margin:15px">세금 환급을 위해서는 가급적 시간적인 </span><br><span style="margin:15px">여유를 가지고 가는 것이 좋습니다.</span></span></span>
+
+						<br>2. 우선 세관에 들려 환급전표(tax refund<span style="margin:15px"> cheque)와 함께 받은 하얀 봉투(환급전표를</span><br> <span style="margin:15px">넣는)에 반출 도장(stamp)을 받아야합니다.</span><br>
+
+						<span style="margin:15px">별도의 확인 없이 도장을 찍어 주는 세관도 <span style="margin:15px">있는 반면, 실제 구매한 물건과 영수증을 보여<br><span style="margin:15px">달라고 요구하는 경우도 많으므로 짐을 붙이<br><span style="margin:15px">기 전에 먼저 세관에서 도장을 받아야 <br><span style="margin:15px">합니다. 세관에서 찍어주는 도장의 유효기간<br><span style="margin:15px">은 국가별로 상이하나 대개는 2~3개월<br><span style="margin:15px">입니다.</span></span></span></span></span></span>
+
+						<br>3. 현금으로 받는 경우에는 세관 옆에 위치해 <br><span style="margin:15px">있는 현금 환급소(공항 내, 은행 안에 있는<br><span style="margin:15px"> 경우도 있음)에 가서 영수증과 스탬프를 받은 <span style="margin:15px">서류를 여권과 같이 창구에 제출합니다. 이 때 <span style="margin:15px">환급대행사 직원이 미화로 받고 싶은지 물을 <span style="margin:15px">수도 있습니다.</span></span></span></span>
+
+						<br>4. 카드계좌로 환급을 신청하는 경우, 스탬프<span style="margin:15px">를 찍은 서류(환급전표 앞장을 넣은 봉투)를 <span style="margin:15px">환급소 인근에 비치된 우체통에 반드시 <br><span style="margin:15px">넣어야 합니다. 도장을 받지 않거나, 도장의<span style="margin:15px"> 유효기간이 경과했거나, 서류를 우체통에<br><span style="margin:15px"> 넣지 않으면 Tax Refund가 이루어지지 <br><span style="margin:15px">않습니다.</span></span></span></span></span><br>
+
+						<br>● 텍스 리펀 주의사항<br>
+						1. 신고의 제반 절차는 본인이 직접 해야 합니다.<br>
+
+						2. EU회원국 여러 나라를 여행하다가 출국<br><span style="margin:15px">할 때는 최종 출국하는 국가에서<br><span style="margin:15px"> 세관확인을 한번만 받으면 됩니다.</span></span>
+
+						<br>3. 노르웨이, 스위스, 아이슬랜드 등은<br><span style="margin:15px"> EU회원국이 아니어서 관세동맹(Custom<br><span style="margin:15px"> Union)이 체결되어 있지 않으므로 국경을 벗<br><span style="margin:15px">어날 때 반드시 환급을 받아야 합니다.</span></span></span>
+
+						<span style="margin:15px">마찬가지로 EU회원국에서 이들 국가로 이동<br><span style="margin:15px">하는 경우에도 미리 환급절차를 밟아야 <br><span style="margin:15px">합니다. 비행기를 이용한다면 공항에서 받으<br><span style="margin:15px">면 되고, 기차를 이용한다면 큰 역 또는 <br><span style="margin:15px">국경선을 넘는 기차 내에서 Tax Refund신고<br><span style="margin:15px">를 할 수 있습니다.</span></span></span></span>
+
+						<br><span style="margin:15px">버스로 국경을 넘는 경우에는 국경 검문소<br><span style="margin:15px"> 내 환급소를 이용할 수 있습니다.</span>
+
+						<br>4. 루마니아, 불가리아, 체코 등은<br><span style="margin:15px"> EU회원국이지만 다른 EU회원국과 달리 해당<br><span style="margin:15px">국(Local Customs)에서만 신청이 가능하므로 <br><span style="margin:15px">노르웨이, 스위스, 아일랜드처럼 출국 전에 <br><span style="margin:15px">신고를 해야 합니다.</span></span></span></span>
+
+						<br><span style="margin:15px">EU회원국에서 이 나라들로 이동하는 <br><span style="margin:15px">경우에도 마찬가지입니다.</span></span>
+						
+						</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div> 
+	
+		
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+      
+	</body>
+</html>

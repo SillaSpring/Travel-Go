@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <title>softWare</title>
+    <style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+    #map {
+        height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+    <script>
+    var lat;
+    var lng;
+    var url1;
+    var url2;
+    var countryName;
+    var features = new Array;
+    var map;
+    var proxy = 'https://cryptic-headland-94862.herokuapp.com/';
+
+
+    (function($) {
+    	/*OPEN API USE*/
+        var temp = location.href.split("?");
+        var temp = temp[1].split("=");
+        var t = temp[1];
+
+        url1 =
+            "http://apis.data.go.kr/1262000/CountryBasicService/getCountryBasicList?ServiceKey=I%2F%2BYWCn598KJQ0%2F2r%2FWSF%2FXMSxlm92c4hgy6qm8Z2A2uFZfg8NGc6yqAwMQSji5I4sVULlXPh8essdV9a7HKSA%3D%3D&countryName=" + t;
+
+        $.ajax({
+            type: "GET",
+            url: proxy + url1,
+            dataType: "xml",
+            success: onSuccess1
+
+        });
+
+        function onSuccess1(data) {
+
+            $(data).find("item").each(function() {
+
+                countryName = $(this).find("countryName").text();
+                var imgUrl = $(this).find("imgUrl").text();
+
+                url2 =
+                    "https://maps.googleapis.com/maps/api/geocode/xml?key=AIzaSyAAl33C7GNqvCreJNWEGdiVDTwGAF4FUzU&new_forward_geocoder=true&address=" + countryName;
+
+                $.ajax({
+                    type: "GET",
+                    url: proxy + url2,
+                    dataType: "xml",
+                    success: onSuccess2
+                });
+
+                function onSuccess2(data1) {
+
+                    lat = $(data1).find("location").find("lat").text();
+                    lng = $(data1).find("location").find("lng").text();
+
+                    <!-- var image = { -->
+                    <!-- url: imgUrl, -->
+                    <!-- size: null, -->
+                    <!-- origin: null, -->
+                    <!-- anchor: null, -->
+                    <!-- scaledSize: new google.maps.Size(40, 25) -->
+                    <!-- }; -->
+
+
+                } //onSuccess2
+            }); //item
+        } //onSuccess1
+
+
+    })(jQuery);
+    </script>
+    <script>
+    /*Google Map Mark*/
+    setTimeout(function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 5,
+            center: new google.maps.LatLng(lat, lng),
+            mapTypeId: 'roadmap'
+        });
+
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map
+        }); //marker
+
+
+        <!-- features.forEach(function(feature) { -->
+        <!-- alert(feature.position+"/"+feature.type); -->
+        <!-- var marker = new google.maps.Marker({ -->
+        <!-- position: feature.position, -->
+        <!-- icon : feature.type, -->
+        <!-- map: map -->
+        <!-- });	//marker	 -->
+        <!-- }); //forEach -->
+
+    }, 3000);
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1QCJyCa0li4wzpMI9pjEqn9E2Iwg77BQ">
+    </script>
+</head>
+
+<body>
+    <div id="test"></div>
+    <div id="map"></div>
+</body>
+
+</html>

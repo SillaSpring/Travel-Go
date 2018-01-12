@@ -1,0 +1,513 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-storage.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="js/session.js"></script>
+    <style>
+    html {
+        font-family: GillSans, Calibri, Trebuchet, sans-serif;
+    }
+
+    @font-face {
+        font-family: 'godoMaum';
+        src: url('font/godoMaum.ttf') format("truetype");
+    }
+
+    @font-face {
+        font-family: 'NanumGothicCoding';
+        src: url('http://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css') format("truetype");
+    }
+
+    .slides {
+        font-family: NanumGothicCoding;
+    }
+
+    .brand-logo {
+        font-family: godoMaum;
+    }
+
+    body {
+        font-family: NanumGothicCoding;
+    }
+
+    #head_title {
+        font-size: 55px;
+    }
+    </style>
+</head>
+<script>
+<!-- CardDetail -->
+function CardDetail(val, num) {
+    var title_id = val + "_title" + num;
+
+    var title = $("#" + title_id).text();
+    location.href = "submain_" + val + "_detail.html?title=" + title;
+};
+<!-- CardDetail -->
+
+<!-- CommunityDetail -->
+function CommunityDetail(val, num, writer) {
+    var title_id = val + "_title" + num;
+    var title = $("#" + title_id).text();
+    var cd_writer = $("#writer" + num).text();
+    $.session.set("writer", cd_writer);
+
+    location.href = "submain_" + val + "_detail.html?title=" + title;
+}
+<!-- CommunityDetail -->
+</script>
+<script>
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDqGYfsJr91PKULZ7CICbCahoRvs4h3JmE",
+    authDomain: "capstone1214.firebaseapp.com",
+    databaseURL: "https://capstone1214.firebaseio.com",
+    projectId: "capstone1214",
+    storageBucket: "capstone1214.appspot.com",
+    messagingSenderId: "744557786732"
+};
+firebase.initializeApp(config);
+
+$(document).ready(function() {
+    var writer = $.session.get("Writer");
+    var id = $.session.get("id");
+    var photoUrl = $.session.get("photoUrl");
+
+    <!-- 로그인_확인 -->
+    if (writer != 0) {
+        $("#login_icon").text("people");
+    }
+    <!-- 로그인_확인 -->
+
+    $(".slider").slider({
+        height: 150,
+        indicators: false
+    });
+    $(".button-collapse").sideNav();
+    $(".carousel").carousel();
+    $(".modal").modal(); 
+    $("#login_bt").click(function() {
+        if (writer == 0) {
+            $("#login_bt").attr("href", "login.html")
+        } else {
+            if (id == "null") { 
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            } else {
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>" +
+                    "<p>" + id + "</p>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            }
+
+        }
+    });
+    $("#logout").click(function() {
+        firebase.auth().signOut().then(function() {
+            $.session.set("Writer", 0);
+            // Sign-out successful.
+        }).catch(function(error) {
+            // An error happened.
+        });
+    });
+
+    $(".card_detail").click(function() {
+        var card_id = $(this).attr('id');
+        var temp = card_id.split("_");
+        var val = temp[0];
+        var num = temp[1];
+
+        if (val == "community") {
+            CommunityDetail(val, num, writer);
+        } else {
+            CardDetail(val, num);
+        }
+    });
+
+});
+</script>
+
+<body>
+    <header>
+        <nav>
+            <!-- nav바 -->
+            <div class="nav-wrapper white">
+                <a href="main.html" class="brand-logo center blue-text text-darken-2" id="head_title">여행, 가다</a>
+                <ul class="left">
+                    <li><a href="#" data-activates="slide-out" class="button-collapse" style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+                </ul>
+                <ul class="right">
+                    <li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+                </ul>
+            </div>
+            <!--====================================햄버거버튼===================================-->
+            <ul id="slide-out" class="side-nav">
+                <!-- side-nav바 -->
+                <div>
+                    <img src="img/2.jpg" style="width:300px; height:150px" />
+                </div>
+                <li>
+                    <a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+                </li>
+                <li>
+                    <a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+                </li>
+                <li>
+                    <a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+                </li>
+                <li>
+                    <a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+                </li>
+                <li>
+                    <a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+                </li>
+                <li>
+                    <a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+                </li>
+                <li>
+                    <a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+                </li>
+                <li>
+                    <a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+                </li>
+            </ul>
+            <!-- side-nav바 -->
+        </nav>
+        <!-- nav바 -->
+    </header>
+    <!--=============================상단슬라이더=================================-->
+    <div class="slider">
+        <!-- 상단 img -->
+        <ul class="slides ">
+            <li>
+                <img src="img/m3.jpg">
+                <!-- random image -->
+                <div class="caption right-align">
+                    <h5>I♥NY, 미국</h5>
+                    <h6 class="light grey-text text-lighten-3">사랑할 수 밖에 없는 나라</h6>
+                </div>
+            </li>
+            <li>
+                <img src="img/m1.jpg">
+                <!-- random image -->
+                <div class="caption center-align">
+                    <h5>아름다운 나라, 프랑스</h5>
+                    <h6 class="light grey-text text-lighten-3">경이로운 풍경과 유적지 </br>모든 이들의 선망하는 장소 곳!!!</h6>
+                </div>
+            </li>
+            <li>
+                <img src="img/m2.jpg">
+                <!-- random image -->
+                <div class="caption left-align">
+                    <h5>Made in Italy, 이탈리아</h5>
+                    <h6 class="light grey-text text-lighten-3"> 로마의 본고장 역사가 숨쉬는 곳</h6>
+                </div>
+            </li>
+            <li>
+                <img src="img/m4.jpg">
+                <!-- random image -->
+                <div class="caption right-align black-text text-accent-3">
+                    <h5>There's nothing like Australia, 호주</h5>
+                    <h6 class="light black-text text-accent-3">자연과 도시가 살아 숨쉬는 공간</h6>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- 상단 img -->
+    <!-- ============================================검색창=================================== -->
+    <div class="row">
+        <div class="col s1 center-align" style=" margin-top:15px;">
+            <i class="large material-icons" style="margin-left:8px; margin-top:10px; font-size:35px;">search</i>
+        </div>
+        <a href="list.html">
+            <div class="input-field col s10" id="search1" style=" margin-left:20px">
+                <input id="search" type="text" placeholder="검색하려면 터치하세요!!!">
+            </div>
+        </a>
+    </div>
+    <!--=====================================내용===========================-->
+    <div class="card" style="margin:0px">
+        <!-- tour_card -->
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px;  margin-bottom:0px; font-size:15px; font-weight:bolder;">이 달의 추천명소★</span>
+            <div class="row" style=" margin:0px; margin-bottom:5px;">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="tour_01">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_tour01.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="tour_title01">본다이비치</p>
+                            <p>호주</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="tour_02">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_tour02.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="tour_title02">왓 차나 쏭크람</p>
+                            <p>태국</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row" style=" margin:0px; margin-bottom:5px;">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="tour_03">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_tour05.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="tour_title03"> 베네치아 광장</p>
+                            <p>이탈리아</p>
+                        </div>
+                    </div>
+                    <!-- img_card -->
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="tour_04">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_tour04.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="tour_title04">센트럴 파크</p>
+                            <p>미국</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grey lighten-3" style=" height:15px;"></div>
+    <div class="card" style="margin:0px">
+        <!-- food_card -->
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px;  margin-bottom:0px; font-size:15px; font-weight:bolder;">맛보장 추천맛집!!!</span>
+            <div class="row" style=" margin:0px; margin-bottom:5px; ">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="food_01">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_food01.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="food_title01">다 프란체스코</p>
+                            <p>이탈리아</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="food_02">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_food02.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="food_title02">팁싸마이</p>
+                            <p>태국</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row" style=" margin:0px; margin-bottom:5px;">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="food_03">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_food03.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="food_title03">허리케인그릴</p>
+                            <p>호주</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="food_04">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_food04.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="food_title04">맥스브레너</p>
+                            <p>호주</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grey lighten-3" style=" height:15px;"></div>
+    <div class="card" style="margin:0px">
+        <!-- activity_card -->
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px;  margin-bottom:0px; font-size:15px; font-weight:bolder;">Best 액티비티</span>
+            <div class="row" style=" margin:0px; margin-bottom:5px; ">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="activity_01">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_activity01.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="activity_title01">꼬 싸멧</p>
+                            <p>태국</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="activity_02">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_activity02.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="activity_title02">더 스타 카지노</p>
+                            <p>호주</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row" style=" margin:0px; margin-bottom:5px;">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="activity_03">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_activity03.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="activity_title03">바티칸 박물관</p>
+                            <p>이탈리아</p>
+                        </div>
+                    </div>
+                    <!-- img_card -->
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="activity_04">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_activity04.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="activity_title04"> 라 펠트리넬리</p>
+                            <p>이탈리아</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grey lighten-3" style=" height:15px;"></div>
+    <div class="card" style="margin:0px">
+        <!-- community_card -->
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px;  margin-bottom:0px; font-size:15px; font-weight:bolder;">New 커뮤니티</span>
+            <div class="row" style=" margin:0px; margin-bottom:5px; ">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="community_01">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_community01.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="community_title01">색감깡패 호주 남단의 바다</p>
+                            <p id="writer01">YoungKyu Lee</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:5px" id="community_02">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_community02.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="community_title02">젤라떼리아</p>
+                            <p id="writer02">권혁준</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row" style=" margin:0px; margin-bottom:5px;">
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="community_03">
+                    <div class="card hoverable" style="margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_community03.jpg" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="community_title03">오드리햅번 스페인광장</p>
+                            <p id="writer03">한덕광</p>
+                        </div>
+                    </div>
+                    <!-- img_card -->
+                </div>
+                <div class="col s6 card_detail" style=" padding:0px; margin-bottom:10px" id="community_04">
+                    <div class="card hoverable" style="margin-left:5px; margin-right:10px;  margin-bottom:0px;  margin-top:0px">
+                        <div class="card-image">
+                            <img src="img/main_img/main_community04.png" style="height:150px;">
+                        </div>
+                        <div class="card-content center-align" style=" font-size:12px; height:50px; padding:0px; margin-top:10px;">
+                            <p style="margin-bottom:5px" id="community_title04">끄라비는 신의 한수!!</p>
+                            <p id="writer04">최윤정</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grey lighten-3" style=" height:15px;"></div>
+    <!--Floatting_button-->
+    <div class="fixed-action-btn horizontal click-to-toggle">
+        <a class="btn-floating btn-large red">
+				<i class="material-icons">add</i>
+			</a>
+        <ul>
+            <li><a class="btn-floating red " href="translate.html"><i class="material-icons">translate</i></a></li>
+            <li><a class="btn-floating yellow darken-1" href="worldmap.html"><i class="material-icons">language</i></a></li>
+            <li><a class="btn-floating green" href="direction.html"><i class="material-icons">navigation</i></a></li>
+            <li><a class="btn-floating blue" href="notice.html"><i class="material-icons">announcement</i></a></li>
+        </ul>
+    </div>
+    <!--Floatting_button-->
+    <!-- login_modal -->
+    <div id="login_modal" class="modal">
+        <div class="modal-content" style="padding:0px;">
+            <div class="row valign-wrapper">
+                <div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+                <div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+                    <img src="" id="login_img" style="height:75px;" />
+                    <!-- <i class="material-icons" style="font-size:100px">person</i> -->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:0px;">
+            <div class="row" style="margin:0px;">
+                <div class="col s6 left-align">
+                    <a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+                </div>
+                <div class="col s6 right-align">
+                    <a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- login_modal -->
+</body>
+
+</html>

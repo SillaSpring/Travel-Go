@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+	  <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+	  <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+	  <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+	  <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-storage.js"></script>
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+   </style>
+   	<script>
+		// Initialize Firebase
+		var config = {
+			apiKey: "AIzaSyDqGYfsJr91PKULZ7CICbCahoRvs4h3JmE",
+			authDomain: "capstone1214.firebaseapp.com",
+			databaseURL: "https://capstone1214.firebaseio.com",
+			projectId: "capstone1214",
+			storageBucket: "capstone1214.appspot.com",
+			messagingSenderId: "744557786732"
+		};
+		firebase.initializeApp(config);
+		
+	
+	<!-- ReadData -->
+	function ReadData(countryName) {
+		//'hex'->'utf-8'
+		var countryName = decodeURIComponent(countryName);
+		
+		var dbuser = firebase.database().ref('tour/').orderByChild("country").equalTo(countryName);
+		//on() 또는 once() 메소드
+		//경로에서 데이터를 읽고 변경사항을 수신 대기를 사용해 이벤트를 관찰
+		dbuser.once('value', function(snap){ //on은 이벤트발생할때마다 계쏙 once는 한번만 발생시킨다. 비교
+			snap.forEach(function(childSnapshot) {
+			
+				image_name = childSnapshot.child("photo").child("photo1").val();
+				country = childSnapshot.child("country").val();
+				title = childSnapshot.child("title").val();
+				
+				WriteCard(image_name,country,title);			
+			});   
+		});    
+	}		
+	<!-- ReadData -->		
+
+	<!-- WriteCard -->
+	function WriteCard(image_name,country,title) {
+
+		// Create a reference with an initial file path and name
+		var storage = firebase.storage();	
+		var pathReference = storage.ref("tour_images/"+country+"/"+image_name);	
+
+		// Get the download URL
+		$("#content").text("");
+		pathReference.getDownloadURL().then(function(url) {
+
+			<!-- $("#content").append( -->
+				<!-- "<a href='submain_tour_detail.html?title="+title+"'>"+ -->
+					<!-- "<div class='col s6 valign-center'>"+ -->
+						<!-- "<div class='card hoverable valign-center'>"+ -->
+							<!-- "<div class='card-image valign-center'>"+ -->
+								<!-- "<img src='"+url+"' style='height:130px'>"+ -->
+							<!-- "</div>"+ -->
+							<!-- "<div class='card-content center-align valign-center black-text' style='font-size:12px; padding:0; margin-top:10px'>"+ -->
+								<!-- "<p style='color:black'>"+title+"</p>"+ -->
+								<!-- "<p style='margin-top:10px; margin-bottom:10px; color:black'>"+country+"</p>"+ -->
+								<!-- "<div style='height:1px'></div>"+ -->
+							<!-- "</div>"+ -->
+						<!-- "</div>"+ -->
+					<!-- "</div>"+ -->
+				<!-- "</a>"	 -->
+			<!-- );	 -->
+			$("#content").append(
+            "<a href='submain_tour_detail.html?title="+title+"'>"+
+               "<div class='col s6' style='padding:0px; margin-bottom:5px'>"+
+                  "<div class='card hoverable' style='margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px'>"+
+                     "<div class='card-image'>"+
+                        "<img style='height:150px;' src='"+url+"'>"+
+                     "</div>"+
+                     "<div class='card-content center-align' style='font-size:12px; height:50px; padding:0px; margin-top:10px; margin-bottom:10px'>"+
+                        "<p style='margin-bottom:5px; color:black'>"+title+"</p>"+
+                        "<p style='color:black'>"+country+"</p>"+
+                     "</div>"+
+                  "</div>"+
+               "</div>"+
+            "</a>"
+         );   
+		}).catch(function(error) {
+
+			// A full list of error codes is available at
+			// https://firebase.google.com/docs/storage/web/handle-errors
+			switch (error.code) {
+				case 'storage/object_not_found':
+					// File doesn't exist
+					break;
+
+				case 'storage/unauthorized':
+					// User doesn't have permission to access the object
+					break;
+
+				case 'storage/canceled':
+					// User canceled the upload
+					break;
+
+				case 'storage/unknown':
+					// Unknown error occurred, inspect the server response
+					break;
+				}
+			});
+	}
+	<!-- WriteCard -->	
+	</script>
+	<script>
+	$( document ).ready(function(){
+		var temp = location.href.split("?");
+		var temp = temp[1].split("=");
+		var countryName = temp[1];
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+        $(".slider").slider({
+			height:140,
+			indicators:false
+		});
+        $(".button-collapse").sideNav();
+		$(".modal").modal();
+		$(".carousel").carousel({});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		ReadData(countryName); //페이지 실행시 파일이미지 읽어오기	
+    });
+	</script>
+   
+   <body>
+		<header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+		
+		<div class="row" style="margin:5px;">
+			<div class="col s5">
+				<span style="font-weight:bold; font-size:15px;">명소(관광지)</span>
+			</div>
+		</div> <!-- title -->
+		
+		<div id="content1">
+			<div class="row valign-center" id="content">
+				
+			</div> <!-- row -->
+		</div> <!-- content -->        
+		
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+   </body>
+</html>

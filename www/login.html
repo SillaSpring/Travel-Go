@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <!-- 인증서비스 -->
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-storage.js"></script>
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <script type="text/javascript" src="js/session.js"></script>
+</head>
+<style>
+@font-face {
+    font-family: 'godoMaum';
+    src: url('font/godoMaum.ttf') format("truetype");
+}
+
+.brand-logo {
+    font-family: godoMaum;
+}
+
+.medium-small {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0;
+}
+
+.login-form-text {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+.login-text {
+    margin-top: -6px;
+    margin-left: -6px !important;
+}
+
+.margin {
+    margin: 0 !important;
+}
+
+.pointer-events {
+    pointer-events: auto !important;
+}
+
+.input-field>.material-icons {
+    padding-top: 10px;
+}
+
+.input-field div.error {
+    position: relative;
+    top: -1rem;
+    left: 3rem;
+    font-size: 0.8rem;
+    color: #FF4081;
+    -webkit-transform: translateY(0%);
+    -ms-transform: translateY(0%);
+    -o-transform: translateY(0%);
+    transform: translateY(0%);
+}
+</style>
+<script>
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDqGYfsJr91PKULZ7CICbCahoRvs4h3JmE",
+    authDomain: "capstone1214.firebaseapp.com",
+    databaseURL: "https://capstone1214.firebaseio.com",
+    projectId: "capstone1214",
+    storageBucket: "capstone1214.appspot.com",
+    messagingSenderId: "744557786732"
+};
+firebase.initializeApp(config);
+
+<!-- login_check -->
+function login_check(id, password) {
+    var dbuser = firebase.database().ref('member/' + id);
+    //on() 또는 once() 메소드
+    //경로에서 데이터를 읽고 변경사항을 수신 대기를 사용해 이벤트를 관찰
+    dbuser.once('value', function(snap) {
+        var check_val = snap.child("password").val();
+        var username = snap.child("username").val();
+        var photoUrl = "img/person.png"
+        if (check_val == password) {
+            $.session.set("Writer", username); // session.set(key값, value값);
+            $.session.set("id", id);
+            $.session.set("photoUrl", photoUrl);
+            history.go(-1);
+        } else {
+            alert("비밀번호 체크 해주세요");
+            history.go(0);
+        }
+    });
+}
+<!-- login_check -->
+</script>
+<script>
+var _uid = null;
+
+$(document).ready(function() {
+    $(".button-collapse").sideNav();
+    $(".modal").modal();
+    $("#password").keyup(function() {
+        $("#id_login").attr("class", "btn waves-effect waves-light col s12");
+    });
+    $("#id_login").click(function() {
+        var id = $("#id").val();
+        var password = $("#password").val();
+        login_check(id, password);
+    });
+    /*Google login*/
+    $("#google_login").click(function() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then(function(result) {
+                history.go(-1);
+
+            }).catch(function(error) {
+                alert(error.message);
+                history.go(0);
+            });
+    });
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            _uid = user.uid;
+            $.session.set("Writer", user.displayName); // session.set(key값, value값);
+            $.session.set("photoUrl", user.photoURL);
+            $.session.set("id", user.email);
+
+            firebase.database().ref('/member/' + user.uid).set({
+                "auth": 0,
+                "siteOn": 1,
+                "personal_data": { "username": user.displayName }
+            });
+        }
+    });
+    /*facebook login*/
+    $("#facebook_login").click(function() {
+
+        var provider = new firebase.auth.FacebookAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then(function(result) {
+
+                // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+
+                history.go(-1);
+
+            }).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // The email of the user's account used.
+                var email = error.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = error.credential;
+                alert(error);
+            });
+    });
+});
+</script>
+
+<body>
+    <header>
+        <nav>
+            <!-- nav바 -->
+            <div class="nav-wrapper white">
+                <a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+                <ul class="left">
+                    <li><a href="#" data-activates="slide-out" class="button-collapse" style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+                </ul>
+                <ul class="right">
+                    <li><a id="login_bt" href="" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+                </ul>
+            </div>
+            <!--====================================햄버거버튼===================================-->
+            <ul id="slide-out" class="side-nav">
+                <!-- side-nav바 -->
+                <div>
+                    <img src="img/2.jpg" style="width:300px; height:150px" />
+                </div>
+                <li>
+                    <a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+                </li>
+                <li>
+                    <a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+                </li>
+                <li>
+                    <a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+                </li>
+                <li>
+                    <a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+                </li>
+                <li>
+                    <a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+                </li>
+                <li>
+                    <a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+                </li>
+                <li>
+                    <a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+                </li>
+                <li>
+                    <a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+                </li>
+            </ul>
+            <!-- side-nav바 -->
+        </nav>
+        <!-- nav바 -->
+    </header>
+    <!--================================================ 로그인=====================================-->
+    <div id="login-page" class="row" style="margin:0;padding:0; ">
+        <div class="col s12 z-depth-0 card-panel">
+            <div class="row">
+                <div class="input-field col s12 center">
+                    <!-- <img src="images/login-logo.png" alt="" class="circle responsive-img valign profile-image-login"/> -->
+                    <p style="font-size:2rem; ">로그인</p>
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-social-person-outline prefix"></i> -->
+                    <i class="material-icons prefix">email</i>
+                    <input id="id" name="id" type="text" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;); cursor: auto;" />
+                    <label for="id" data-error="wrong" class="center-align" data-success="right">아이디</label>
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password" name="password" type="password" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=&quot;);" />
+                    <label for="password">비밀번호</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <a class="btn waves-effect waves-light col s12 disabled" style="font-size:17px; height:40px" id="id_login">로그인</a>
+                </div>
+                <div class="input-field col s12">
+                    <a class="btn waves-effect waves-light col s12  red darken-1" style="font-size:17px; height:40px" id="google_login">구글로 로그인</a>
+                </div>
+                <div class="input-field col s12">
+                    <a class="btn waves-effect waves-light col s12  blue darken-4" style="font-size:17px; height:40px" id="facebook_login">페이스북으로 로그인</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="center-align input-field col s12">
+                    <p class="margin medium-small">아직 회원이 아니신가요? <a href="register.html">회원가입</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

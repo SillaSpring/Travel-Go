@@ -1,0 +1,761 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-storage.js"></script>
+    <script type="text/javascript" src="js/info.js"></script>
+    <script type="text/javascript" src="js/session.js"></script>
+</head>
+<style>
+@font-face {
+    font-family: 'godoMaum';
+    src: url('font/godoMaum.ttf') format("truetype");
+}
+
+.brand-logo {
+    font-family: godoMaum;
+}
+
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    z-index: 100;
+}
+</style>
+<script>
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDqGYfsJr91PKULZ7CICbCahoRvs4h3JmE",
+    authDomain: "capstone1214.firebaseapp.com",
+    databaseURL: "https://capstone1214.firebaseio.com",
+    projectId: "capstone1214",
+    storageBucket: "capstone1214.appspot.com",
+    messagingSenderId: "744557786732"
+};
+firebase.initializeApp(config);
+
+<!-- ReadTour -->
+function ReadTour(countryName) {
+
+    var count = 0;
+    var dbuser = firebase.database().ref('tour/').orderByChild("country").equalTo(countryName).limitToLast(2);
+    //on() 또는 once() 메소드
+    //경로에서 데이터를 읽고 변경사항을 수신 대기를 사용해 이벤트를 관찰
+    dbuser.once('value', function(snap) { //on은 이벤트발생할때마다 계쏙 once는 한번만 발생시킨다.
+        <!-- DB값_NULL -->
+        if (snap.toJSON() == null) {
+            $("#tour_card").hide();
+            $("#tour_card_grey").hide();
+        }
+
+        snap.forEach(function(childSnapshot) {
+            image_name = childSnapshot.child("photo").child("photo1").val();
+            country = childSnapshot.child("country").val();
+            title = childSnapshot.child("title").val();
+            hits = childSnapshot.child("hits").val();
+
+            WriteTour(image_name, country, title);
+        });
+    });
+}
+
+<!-- WriteTour -->
+function WriteTour(image_name, country, title) {
+
+    // Create a reference with an initial file path and name
+    var storage = firebase.storage();
+    var pathReference = storage.ref("tour_images/" + country + "/" + image_name);
+
+    // Get the download URL
+    $("#tour_content").text("");
+    pathReference.getDownloadURL().then(function(url) {
+
+        $("#tour_content").append(
+            "<a href='submain_tour_detail.html?title=" + title + "'>" +
+            "<div class='col s6' style='padding:0px; margin-bottom:5px'>" +
+            "<div class='card hoverable' style='margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px'>" +
+            "<div class='card-image'>" +
+            "<img style='height:150px;' src='" + url + "'>" +
+            "</div>" +
+            "<div class='card-content center-align' style='font-size:12px; height:50px; padding:0px; margin-top:10px;'>" +
+            "<p style='margin-bottom:5px; color:black'>" + title + "</p>" +
+            "<p style='color:black'>" + country + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</a>"
+        );
+    }).catch(function(error) {
+
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+            case 'storage/object_not_found':
+                // File doesn't exist
+                break;
+
+            case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+
+            case 'storage/canceled':
+                // User canceled the upload
+                break;
+
+            case 'storage/unknown':
+                // Unknown error occurred, inspect the server response
+                break;
+        }
+    });
+}
+<!-- WriteTour -->
+
+<!-- ReadFood -->
+function ReadFood(countryName) {
+
+    var count = 0;
+    var dbuser = firebase.database().ref('food/').orderByChild("country").equalTo(countryName).limitToLast(2);
+    //on() 또는 once() 메소드
+    //경로에서 데이터를 읽고 변경사항을 수신 대기를 사용해 이벤트를 관찰
+    dbuser.once('value', function(snap) { //on은 이벤트발생할때마다 계쏙 once는 한번만 발생시킨다. 비교
+        <!-- DB값_NULL -->
+        if (snap.toJSON() == null) {
+            $("#food_card").hide();
+            $("#food_card_grey").hide();
+        }
+        <!-- DB값_NULL -->
+        snap.forEach(function(childSnapshot) {
+
+            image_name = childSnapshot.child("photo").child("photo1").val();
+            country = childSnapshot.child("country").val();
+            title = childSnapshot.child("title").val();
+
+            WriteFood(image_name, country, title);
+
+        });
+    });
+}
+<!-- ReadFood -->
+
+
+<!-- WriteFood -->
+function WriteFood(image_name, country, title) {
+
+    // Create a reference with an initial file path and name
+    var storage = firebase.storage();
+    var pathReference = storage.ref("food_images/" + country + "/" + image_name);
+
+    // Get the download URL
+    $("#food_content").text("");
+    pathReference.getDownloadURL().then(function(url) {
+
+        $("#food_content").append(
+            "<a href='submain_food_detail.html?title=" + title + "'>" +
+            "<div class='col s6' style='padding:0px; margin-bottom:5px'>" +
+            "<div class='card hoverable' style='margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px'>" +
+            "<div class='card-image'>" +
+            "<img style='height:150px;' src='" + url + "'>" +
+            "</div>" +
+            "<div class='card-content center-align' style='font-size:12px; height:50px; padding:0px; margin-top:10px;'>" +
+            "<p style='margin-bottom:5px; color:black'>" + title + "</p>" +
+            "<p style='color:black'>" + country + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</a>"
+        );
+    }).catch(function(error) {
+
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+            case 'storage/object_not_found':
+                // File doesn't exist
+                break;
+
+            case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+
+            case 'storage/canceled':
+                // User canceled the upload
+                break;
+
+            case 'storage/unknown':
+                // Unknown error occurred, inspect the server response
+                break;
+        }
+    });
+}
+<!-- WriteFood -->   
+
+<!-- ReadActivity -->
+function ReadActivity(countryName) {
+
+    var count = 0;
+    var dbuser = firebase.database().ref('activity/').orderByChild("country").equalTo(countryName).limitToLast(2);
+    //on() 또는 once() 메소드
+    //경로에서 데이터를 읽고 변경사항을 수신 대기를 사용해 이벤트를 관찰
+    dbuser.once('value', function(snap) { //on은 이벤트발생할때마다 계쏙 once는 한번만 발생시킨다. 비교
+        <!-- DB값_NULL -->
+        if (snap.toJSON() == null) {
+            $("#activity_card").hide();
+            $("#activity_card_grey").hide();
+        }
+        <!-- DB값_NULL -->
+        snap.forEach(function(childSnapshot) {
+
+            image_name = childSnapshot.child("photo").child("photo1").val();
+            country = childSnapshot.child("country").val();
+            title = childSnapshot.child("title").val();
+
+            WriteActivity(image_name, country, title);
+        });
+    });
+}
+<!-- ReadActivity -->      
+
+<!-- WriteActivity -->
+function WriteActivity(image_name, country, title) {
+
+    // Create a reference with an initial file path and name
+    var storage = firebase.storage();
+    var pathReference = storage.ref("activity_images/" + country + "/" + image_name);
+
+    // Get the download URL
+    $("#activity_content").text("");
+    pathReference.getDownloadURL().then(function(url) {
+
+        $("#activity_content").append(
+            "<a href='submain_activity_detail.html?title=" + title + "'>" +
+            "<div class='col s6' style='padding:0px; margin-bottom:5px'>" +
+            "<div class='card hoverable' style='margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px'>" +
+            "<div class='card-image'>" +
+            "<img style='height:150px;' src='" + url + "'>" +
+            "</div>" +
+            "<div class='card-content center-align' style='font-size:12px; height:50px; padding:0px; margin-top:10px;'>" +
+            "<p style='margin-bottom:5px; color:black'>" + title + "</p>" +
+            "<p style='color:black'>" + country + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</a>"
+        );
+
+    }).catch(function(error) {
+
+
+
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+            case 'storage/object_not_found':
+                // File doesn't exist
+                break;
+
+            case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+
+            case 'storage/canceled':
+                // User canceled the upload
+                break;
+
+            case 'storage/unknown':
+                // Unknown error occurred, inspect the server response
+                break;
+        }
+    });
+}
+<!-- WriteActivity -->
+
+<!-- ReadCommunity -->
+function ReadCommunity(countryName) {
+
+    var dbuser = firebase.database().ref('community/').orderByChild("country").equalTo(countryName).limitToLast(2);
+
+    //on() 또는 once() 메소드
+    //경로에서 데이터를 읽고 변경사항을 수신 대기를 사용해 이벤트를 관찰
+    dbuser.once('value', function(snap) { //on은 이벤트발생할때마다 계쏙 once는 한번만 발생시킨다. 비교
+        <!-- DB값_NULL -->
+        if (snap.toJSON() == null) {
+            $("#community_card").hide();
+            $("#community_card_grey").hide();
+        }
+        <!-- DB값_NULL -->
+        snap.forEach(function(childSnapshot) {
+
+            var img = childSnapshot.child("photo").val();
+            var country = childSnapshot.child("country").val();
+            var title = childSnapshot.child("title").val();
+            var writer = childSnapshot.child("writer").val();
+            var hits = childSnapshot.child("hits").val();
+
+            WriteCommunity(img, country, title, writer);
+
+        });
+    });
+}
+<!-- ReadCommunity -->      
+
+<!-- WriteCommunity -->
+function WriteCommunity(img, country, title, writer) {
+
+    // Create a reference with an initial file path and name
+    var storage = firebase.storage();
+    var pathReference = storage.ref("community_images/" + country + "/" + img);
+
+    $("#card_community").attr("href", "submain_community.html?countryName=" + country);
+    $("#community_content").text("");
+    pathReference.getDownloadURL().then(function(url) {
+
+        $("#community_content").append(
+            "<a href='submain_community_detail.html?title=" + title + "'>" +
+            "<div class='col s6' style='padding:0px; margin-bottom:5px'>" +
+            "<div class='card hoverable' style='margin-left:10px; margin-right:5px; margin-bottom:0px; margin-top:0px'>" +
+            "<div class='card-image'>" +
+            "<img style='height:150px;' src='" + url + "'>" +
+            "</div>" +
+            "<div class='card-content center-align' style='font-size:12px; height:50px; padding:0px; margin-top:10px;'>" +
+            "<p style='margin-bottom:5px; color:black'>" + title + "</p>" +
+            "<p style='color:black'>" + writer + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</a>"
+        );
+    }).catch(function(error) {
+
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+            case 'storage/object_not_found':
+                // File doesn't exist
+                break;
+
+            case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+
+            case 'storage/canceled':
+                // User canceled the upload
+                break;
+
+            case 'storage/unknown':
+                // Unknown error occurred, inspect the server response
+                break;
+        }
+    });
+}
+<!-- WriteCommunity -->
+</script>
+<script>
+$(document).ready(function() {
+    var temp = location.href.split("?");
+    var temp = temp[1].split("=");
+    var d_countryName = temp[1];
+    var countryName = decodeURIComponent(d_countryName); //'hex'->'utf-8'
+    var writer = $.session.get("Writer");
+    var id = $.session.get("id");
+    var photoUrl = $.session.get("photoUrl");
+
+    <!-- 로그인_확인 -->
+    if (writer != 0) {
+        $("#login_icon").text("people");
+    }
+    <!-- 로그인_확인 -->
+
+    $(".slider").slider({
+        height: 140,
+        indicators: false
+    });
+    $(".button-collapse").sideNav();
+    $(".modal").modal();
+    $("#login_bt").click(function() {
+        if (writer == 0) {
+            $("#login_bt").attr("href", "login.html")
+        } else {
+            if (id == "null") { //페이스북으로 로그인시
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            } else {
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>" +
+                    "<p>" + id + "</p>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            }
+        }
+    });
+    $("#logout").click(function() {
+        firebase.auth().signOut().then(function() {
+            $.session.set("Writer", 0);
+            // Sign-out successful.
+        }).catch(function(error) {
+            // An error happened.
+        });
+    });
+
+    ReadTour(countryName);
+    ReadFood(countryName);
+    ReadActivity(countryName);
+    ReadCommunity(countryName);
+});
+/*loading motion*/
+$(document).ajaxStart(function() {
+    $("#loading").show();
+}).ajaxStop(function() {
+    $("#loading").hide();
+});
+</script>
+
+<body>
+    <header>
+        <nav>
+            <!-- nav바 -->
+            <div class="nav-wrapper white">
+                <a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+                <ul class="left">
+                    <li><a href="#" data-activates="slide-out" class="button-collapse" style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+                </ul>
+                <ul class="right">
+                    <li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+                </ul>
+            </div>
+            <!--====================================햄버거버튼===================================-->
+            <ul id="slide-out" class="side-nav">
+                <!-- side-nav바 -->
+                <div>
+                    <img src="img/2.jpg" style="width:300px; height:150px" />
+                </div>
+                <li>
+                    <a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+                </li>
+                <li>
+                    <a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+                </li>
+                <li>
+                    <a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+                </li>
+                <li>
+                    <a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+                </li>
+                <li>
+                    <a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+                </li>
+                <li>
+                    <a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+                </li>
+                <li>
+                    <a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+                </li>
+                <li>
+                    <a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+                </li>
+            </ul>
+            <!-- side-nav바 -->
+        </nav>
+        <!-- nav바 -->
+    </header>
+    <div class="card" style="margin:0px;">
+        <div class="card-image">
+            <img src="img/good.jpg" style="height:200px;" id="submain_background">
+            <span class="card-title valign-wrapper"><img src="" style="width:80px; float: left;" id="countryImg"><span style="float: left; margin-left:5px;" id="countryName"></span></span>
+        </div>
+        <!-- card_image -->
+        <div class="card-action center-align" style="padding:0px; margin:0px">
+            <div class="row" style="margin:0px;">
+                <div class="col s4 center-align" style="border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA; font-size:15px; padding:5px;">
+                    <a id="tap_tour" href="" class="valign-wrapper grey-text text-darken-4" style="width:100px; margin-left:10px">
+                        <div class="row center-align" style="margin:0px;">
+                            <div class="col s3" style="padding:1px;">
+                                <i class="material-icons  red-text">photo_camera</i>
+                            </div>
+                            <div class="col s9" style="padding:1px;">
+                                관광/명소
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 관광_명소 -->
+                <div class="col s4 center-align" style="border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA; font-size:15px; padding:5px">
+                    <a id="tap_food" href="" class="valign-wrapper grey-text text-darken-4" style="width:100px; margin-left:10px">
+                        <div class="row center-align" style="margin:0px;">
+                            <div class="col s3" style="padding:1px;">
+                                <i class="material-icons yellow-text">restaurant</i>
+                            </div>
+                            <div class="col s9" style="padding:1px;">
+                                음식/맛집
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 음식_맛집 -->
+                <div class="col s4 center-align" style="border-bottom:1px solid #EAEAEA; font-size:15px; padding:5px">
+                    <a id="tap_activity" href="" class="valign-wrapper grey-text text-darken-4" style="width:100px; margin-left:10px">
+                        <div class="row center-align" style="margin:0px;">
+                            <div class="col s3" style="padding:1px;">
+                                <i class="material-icons blue-text">sentiment_very_satisfied</i>
+                            </div>
+                            <div class="col s9" style="padding:1px;">
+                                액티비티
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 액티비티 -->
+            </div>
+            <!-- row01 -->
+            <div class="row" style="margin:0px;">
+                <div class="col s4 center-align" style="border-right:1px solid #EAEAEA; font-size:15px; padding:5px">
+                    <a id="tap_community" href="" class="valign-wrapper grey-text text-darken-4" style="width:100px; margin-left:10px">
+                        <div class="row center-align" style="margin:0px;">
+                            <div class="col s3" style="padding:1px;">
+                                <i class=" material-icons orange-text">question_answer</i>
+                            </div>
+                            <div class="col s9" style="padding:1px;">
+                                커뮤니티
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 커뮤니티_사고 -->
+                <div class="col s4 center-align" style="border-right:1px solid #EAEAEA; font-size:15px; padding:5px">
+                    <a id="tap_call" href="" class="valign-wrapper grey-text text-darken-4" style="width:100px; margin-left:10px">
+                        <div class="row center-align" style="margin:0px;">
+                            <div class="col s3" style="padding:1px;">
+                                <i class="material-icons green-text">phone</i>
+                            </div>
+                            <div class="col s9" style="padding:1px;">
+                                현지연락처
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 현지연락처 -->
+                <div class="col s4 center-align" style=" font-size:15px; padding:5px">
+                    <a id="tap_accident" href="" class="valign-wrapper grey-text text-darken-4" style="width:100px; margin-left:10px">
+                        <div class="row center-align" style="margin:0px;">
+                            <div class="col s3" style="padding:1px;">
+                                <i class="material-icons purple-text">notifications_active</i>
+                            </div>
+                            <div class="col s9" style="padding:1px;">
+                                사건/사고
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- 사건_사고 -->
+            </div>
+            <!-- row02 -->
+        </div>
+        <!--card-action-->
+    </div>
+    <!-- main_card -->
+    <div class="grey lighten-3" style="height:15px;"></div>
+    <div class="card" style="margin:0px">
+        <div class="card-content truncate" style="height:130px">
+            <span class="card-title">정보</span>
+            <p class="truncate" id="countryInfo"></p>
+        </div>
+        <!--info_card_content-->
+        <div class="card-action center-align">
+            <a href="" id="info" class="black-text">모두 보기</a>
+        </div>
+        <!--info_card_action -->
+    </div>
+    <!--info_card -->
+    <div class="grey lighten-3" style=" height:15px;"></div>
+    <div class="card" id="tour_card" style="margin:0px">
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left:15px; margin-bottom:0px; font-size:15px; font-weight:bolder">명소(관광지)</span>
+            <div class="row" id="tour_content" style=" margin:0px; margin-bottom:5px;"></div>
+        </div>
+        <!--tour_card_content-->
+        <div class="card-action center-align">
+            <a id="card_tour" href="submain_tour.html" style="margin:0">
+               <span class="blue-text">명소 </span>
+               <span class="black-text"> 더보기</span>
+            </a>
+        </div>
+        <!--tour_card_action -->
+    </div>
+    <!--tour_card -->
+    <div class="grey lighten-3" style=" height:15px;" id="tour_card_grey"></div>
+    <div class="card" id="food_card" style="margin:0px">
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px; margin-bottom:0px; font-size:15px; font-weight:bolder">맛집(음식)</span>
+            <div class="row" id="food_content" style=" margin:0px; margin-bottom:5px;"></div>
+        </div>
+        <!--food_card_content-->
+        <div class="card-action center-align">
+            <a id="card_food" href="submain_food.html" style="margin:0">
+               <span class="blue-text">맛집 </span>
+               <span class="black-text"> 더보기</span>
+            </a>
+        </div>
+        <!--food_card_action -->
+    </div>
+    <!--food_card -->
+    <div class="grey lighten-3" style=" height:15px;" id="food_card_grey"></div>
+    <div class="card" id="activity_card" style="margin:0px">
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px; margin-bottom:0px; font-size:15px; font-weight:bolder">즐길거리(액티비티)</span>
+            <div class="row" id="activity_content" style=" margin:0px; margin-bottom:5px;"></div>
+        </div>
+        <!--activity_card_content-->
+        <div class="card-action center-align">
+            <a id="card_activity" href="submain_activity.html" style="margin:0">
+               <span class="blue-text">액티비티 </span>
+               <span class="black-text"> 더보기</span>
+            </a>
+        </div>
+        <!--activity_card_action -->
+    </div>
+    <!--activity_card -->
+    <div class="grey lighten-3" style=" height:15px;" id="activity_card_grey"></div>
+    <div class="card" id="community_card" style="margin:0px">
+        <div class="card-content" style="margin:0px; padding:0px;">
+            <span class="card-title" style="margin-left: 15px; margin-bottom:0px; font-size:15px; font-weight:bolder">커뮤니티(여행후기)</span>
+            <div class="row" id="community_content" style=" margin:0px; margin-bottom:5px;"></div>
+        </div>
+        <!--community_card_content-->
+        <div class="card-action center-align">
+            <a id="card_community" href="" style="margin:0">
+               <span class="blue-text">커뮤니티 </span>
+               <span class="black-text"> 더보기</span>
+            </a>
+        </div>
+        <!--community_card_action -->
+    </div>
+    <!--community_card -->
+    <div class="grey lighten-3" style=" height:15px;" id="community_card_grey"></div>
+    <div class="card" style="margin:0px">
+        <div class="card-content" style="">
+            <span class="card-title">사건/사고 정보</span>
+            <p id="countryNews" class="truncate"></p>
+        </div>
+        <div class="card-action center-align">
+            <a href="" id="accident" class="black-text">모두 보기</a>
+        </div>
+        <!--accident_card_content -->
+    </div>
+    <!--accident_card -->
+    <div class="grey lighten-3" style=" height:15px;"></div>
+    <div class="card" style="margin:0px">
+        <div class="card-content" style="">
+            <span class="card-title">현지연락처 정보</span>
+            <p id="countryContact" class="truncate" style="font-size:15px !important"></p>
+        </div>
+        <!--call_card_content -->
+        <div class="card-action center-align">
+            <a href="" id="news" class="black-text">모두 보기</a>
+        </div>
+        <!--call_card_action -->
+    </div>
+    <!--call_card -->
+    <!--Floatting_button-->
+    <div class="fixed-action-btn horizontal click-to-toggle">
+        <a class="btn-floating btn-large red">
+            <i class="material-icons">add</i>
+         </a>
+        <ul>
+            <li><a class="btn-floating red " href="translate.html"><i class="material-icons">translate</i></a></li>
+            <li><a class="btn-floating yellow darken-1" href="worldmap.html"><i class="material-icons">language</i></a></li>
+            <li><a class="btn-floating green" href="direction.html"><i class="material-icons">navigation</i></a></li>
+            <li><a class="btn-floating blue" href="notice.html"><i class="material-icons">announcement</i></a></li>
+        </ul>
+    </div>
+    <!--Floatting_button-->
+    <!-- loading_img -->
+    <div class="preloader-wrapper big active" id="loading">
+        <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="spinner-layer spinner-red">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="spinner-layer spinner-yellow">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="spinner-layer spinner-green">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </div>
+    <!-- loading_img -->
+    <!-- login_modal -->
+    <div id="login_modal" class="modal">
+        <div class="modal-content" style="padding:0px;">
+            <div class="row valign-wrapper">
+                <div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+                <div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+                    <img src="" id="login_img" style="height:75px;" />
+                    <!-- <i class="material-icons" style="font-size:100px">person</i> -->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:0px;">
+            <div class="row" style="margin:0px;">
+                <div class="col s6 left-align">
+                    <a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+                </div>
+                <div class="col s6 right-align">
+                    <a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- login_modal -->
+</body>
+
+</html>

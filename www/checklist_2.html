@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	  html {
+		font-family: GillSans, Calibri, Trebuchet, sans-serif;
+	  }
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+	#logo{
+		font-family:godoMaum;
+		margin-top:0; 
+		color:#ffffff;
+		font-size:80px;
+	}
+   </style>
+   <script>
+	$( document ).ready(function(){
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+		$(".slider").slider({
+			height:140,
+			indicators:false
+		});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		$(".button-collapse").sideNav(); 
+    });
+   </script>
+   
+   <body>
+      <header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+   
+		<div class="card" style="padding-top:0px; margin-top:0px; margin-bottom:0px;" >
+			<div class="center-align" style="font-size:30px; font-weight:bolder; margin-top:5px; margin-bottom:5px;" >의학·약학(여행전 체크)</div>
+			<div class="card-content" style="padding:0px; margin-top:2px;">
+				<div class="row" >
+					<div class="col s12"style="margin-bottom:0px;">
+					  <div class="card cyan lighten-5" style="padding:2px; margin-top:0px;">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h5"> 만성질환자는 <br>
+					여유분의 약과 영문 처방전 준비</span>
+						   <blockquote>여행자 검역과 국제공인예방접종증명서(Yellow Card) </blockquote></br>
+						   <p>여행 지역별로 캐나다, 유럽, 일본, 호주 등을 제외한 기타 지역의 여행이나 여행자가 지병이 있는 경우, 사전에 의사와의 상담과 건강진단을 받은 것이 매우 중요합니다.<br>
+						또한, 고혈압, 당뇨, 천식과 같은 만성질환자는 평소 복용하는 약의 현지 구입이 생각보다 쉽지 않을 수 있고, 약값이 비싼 경우도 많기 때문에 의사 또는 약사와의 상담을 통해 필요한 양을 여유 있게 준비하는 것이 좋습니다.<br>
+						이때 나라마다 만성 질환용 약의 반입 허용량을 규제(호주의 경우 3개월 분)하고 있기 때문에 장기 여행인 경우는 현지에서 해당 약을 구입하기 위해 담당 의사의 영문 처방전을 반드시 발급받아 가져가야 합니다.
+						
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- </div> -->
+		<!-- <div class="card" style="padding-top:0px; margin-top:0px; margin-bottom:0px;" > -->
+			<div class="card-content" style="padding:0px; margin-top:2px;">
+				<div class="row" >
+					<div class="col s12"style="margin-bottom:0px;">
+					  <div class="card cyan lighten-5" style="padding:2px; margin-top:0px;">
+						<div class="card-content black-text">
+						   <blockquote style="font-size:20px; margin-bottom:5px; margin-top:0px;">예방접종의 기준</blockquote>
+						<p>여행자에게 필요한 예방접종은 방문국과 여행기간, 여행의 유형 및 여행 목적, 병력 등에 따라 의무사항과 권장사항으로 구분됩니다. 또한 접종의 시기도 질병의 종류에 따라 모두 다릅니다. </br>
+							가령, 사하라 사막 이남의 아프리카, 적도 부근의 남미지역의 국가를 입국하려면 황열(yellow fever)의 예방 접종이 의무사항이며, 황열병 예방접종 증명서(일명 옐로우 카드)가 없으면 입국 거부 또는 격리 조치 등을 당하게 되는 수도 있습니다. 황열 예방 접종은 출발 10~14일 전에 해야 하며 1회의 접종으로 10년간 유효합니다.</br>
+						</p>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<!-- </div> -->
+			
+		
+		<!-- <div class="card" style="padding-top:0px; margin-top:0px; margin-bottom:0px;" > -->
+			<div class="card-content" style="padding:0px; margin-top:2px;">
+				<div class="row" >
+					<div class="col s12"style="margin-bottom:0px;">
+					  <div class="card cyan lighten-5" style="padding:2px; margin-top:0px;">
+					  <div class="card-content black-text">
+						  <span class="card-title" style="Heading h5">의사와의 상담</span>
+						  <blockquote>여행 전 의사와의 상담은 출발 4~6주 전, 최소 3~4주 전에는 이루어지는 게 바람직합니다.</blockquote>
+						<p style="color:Tomato;">여행용 상비약 10가지(식약처 추천)</p>
+						<li> 해열 ∙ 진통 ∙ 소염제</li>
+						<li> 지사제 ∙ 소화제</li>
+						<li> 종합감기약</li>
+						<li> 살균소독제</li>
+						<li> 상처에 바르는 연고</li>
+						<li> 모기 기피제</li>
+						<li> 멀미약</li>
+						<li> 일회용 밴드, 거즈, 반창고</li>
+						<li> 고혈압 ∙ 당뇨 ∙ 천식 등 만성 질환용 약</li>
+						<li> 소아용 지사제 ∙ 해열제</li>	
+						</div>
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+      
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+      
+   </body>
+</html>

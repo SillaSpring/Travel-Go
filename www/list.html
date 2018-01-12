@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="js/session.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+</head>
+<style>
+@font-face {
+    font-family: 'godoMaum';
+    src: url('font/godoMaum.ttf') format("truetype");
+}
+
+.brand-logo {
+    font-family: godoMaum;
+}
+
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    z-index: 100;
+}
+</style>
+<script>
+$(document).ready(function() {
+    var writer = $.session.get("Writer");
+    var id = $.session.get("id");
+    var photoUrl = $.session.get("photoUrl");
+
+    <!-- 로그인_확인 -->
+    if (writer != 0) {
+        $("#login_icon").text("people");
+    }
+    <!-- 로그인_확인 -->
+    $(".modal").modal();
+    $("#login_bt").click(function() {
+        if (writer == 0) {
+            $("#login_bt").attr("href", "login.html")
+        } else {
+            if (id == "null") { //페이스북으로 로그인시
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            } else {
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>" +
+                    "<p>" + id + "</p>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            }
+
+        }
+    });
+    $("#logout").click(function() {
+        firebase.auth().signOut().then(function() {
+            $.session.set("Writer", 0);
+            // Sign-out successful.
+        }).catch(function(error) {
+            // An error happened.
+        });
+    });
+    /*loading motion*/
+    $(document).ajaxStart(function() {
+        $("#loading").show();
+    }).ajaxStop(function() {
+        $("#loading").hide();
+    });
+
+    /*OPEN API USE*/
+    var url1 = "http://apis.data.go.kr/1262000/CountryBasicService/getCountryBasicList?ServiceKey=I%2F%2BYWCn598KJQ0%2F2r%2FWSF%2FXMSxlm92c4hgy6qm8Z2A2uFZfg8NGc6yqAwMQSji5I4sVULlXPh8essdV9a7HKSA%3D%3D&numOfRows=197";
+
+    var proxy = 'https://cryptic-headland-94862.herokuapp.com/'; /*Proxy for Cross Domain XMLHttpRequest Calls*/
+
+    $.ajax({
+        type: "GET",
+        url: proxy + url1,
+        dataType: "xml",
+        success: onSuccess1,
+        error: function(xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+            document.getElementById("notas").innerHTML = "ERRO";
+        }
+    });
+
+    function onSuccess1(data) {
+        $(data).find("item").each(function() {
+
+            var url = "";
+            url = url + "submain.html?";
+            url = url + "countryName=" + $(this).find("countryName").text();
+
+            $("#countryList").append("<li class='collection-item valign-wrapper' style='padding:0px 10px '><a class='valign-wrapper black-text' href='" + url + "' id= 'li' rel='external' style='width:200px; font-size:20px; margin-top:10px; margin-bottom:10px' ><img src='" + $(this).find("imgUrl").text() + "' style='width:40px;'><span style='margin-left:20px; font-size:16px;'>" + $(this).find("countryName").text() + "</span></a></li>");
+        });
+    }
+
+    $(".button-collapse").sideNav();
+
+    $("#search").on("keyup", function() {
+        var text = $(this).val();
+        filter(text);
+    });
+    /*list search*/
+    function filter(text) {
+        var lista = $("#countryList li").hide().filter(function() {
+            var item = $(this).text();
+
+            var padrao = new RegExp(text, "i");
+
+            return padrao.test(item);
+        }).closest("li").show();
+    }
+});
+</script>
+
+<body>
+    <header>
+        <nav>
+            <!-- nav바 -->
+            <div class="nav-wrapper white">
+                <a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+                <ul class="left">
+                    <li><a href="#" data-activates="slide-out" class="button-collapse" style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+                </ul>
+                <ul class="right">
+                    <li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+                </ul>
+            </div>
+            <!--====================================side===================================-->
+            <ul id="slide-out" class="side-nav">
+                <!-- side-nav바 -->
+                <div>
+                    <img src="img/2.jpg" style="width:300px; height:150px" />
+                </div>
+                <li>
+                    <a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+                </li>
+                <li>
+                    <a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+                </li>
+                <li>
+                    <a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+                </li>
+                <li>
+                    <a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+                </li>
+                <li>
+                    <a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+                </li>
+                <li>
+                    <a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+                </li>
+                <li>
+                    <a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+                </li>
+                <li>
+                    <a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+                </li>
+            </ul>
+            <!-- side-nav바 -->
+        </nav>
+        <!-- nav바 -->
+    </header>
+    <!-- ====================================search=================================== -->
+    <div class="row" style="margin:0px; padding:0px;">
+        <div class="col s1 center-align" style=" margin-top:15px;">
+            <i class="large material-icons" style="margin-left:8px; margin-top:10px; font-size:35px;">search</i>
+        </div>
+        <a href="#">
+            <div class="input-field col s10" id="search1" style="margin-left:20px">
+                <input id="search" type="text" class="validate ">
+                <label for="search">검색할 국가명을 입력하세요.</label>
+            </div>
+        </a>
+    </div>
+    <!--================================nation list========================-->
+    <ul class="collection" id="countryList"></ul>
+    <!-- loading_img -->
+    <div class="preloader-wrapper big active" id="loading">
+        <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="spinner-layer spinner-red">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="spinner-layer spinner-yellow">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="spinner-layer spinner-green">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </div>
+    <!-- loading_img -->
+
+    <!--Floatting_button-->
+    <div class="fixed-action-btn horizontal click-to-toggle">
+        <a class="btn-floating btn-large red">
+				<i class="material-icons">add</i>
+			</a>
+        <ul>
+            <li><a class="btn-floating red " href="translate.html"><i class="material-icons">translate</i></a></li>
+            <li><a class="btn-floating yellow darken-1" href="worldmap.html"><i class="material-icons">language</i></a></li>
+            <li><a class="btn-floating green" href="direction.html"><i class="material-icons">navigation</i></a></li>
+            <li><a class="btn-floating blue" href="notice.html"><i class="material-icons">announcement</i></a></li>
+        </ul>
+    </div>
+    <!--Floatting_button-->
+    <!-- login_modal -->
+    <div id="login_modal" class="modal">
+        <div class="modal-content" style="padding:0px;">
+            <div class="row valign-wrapper">
+                <div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+                <div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+                    <img src="" id="login_img" style="height:75px;" />
+                    <!-- <i class="material-icons" style="font-size:100px">person</i> -->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:0px;">
+            <div class="row" style="margin:0px;">
+                <div class="col s6 left-align">
+                    <a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+                </div>
+                <div class="col s6 right-align">
+                    <a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- login_modal -->
+</body>
+
+</html>

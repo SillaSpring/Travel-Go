@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <meta http-equiv="refresh" content="3;main.html">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="js/session.js"></script>
+</head>
+<style>
+html {
+    font-family: GillSans, Calibri, Trebuchet, sans-serif;
+}
+
+@font-face {
+    font-family: 'godoMaum';
+    src: url('font/godoMaum.ttf') format("truetype");
+}
+
+.brand-logo {
+    font-family: godoMaum;
+}
+
+#logo {
+    font-family: godoMaum;
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 80px;
+}
+</style>
+<script>
+/*세션을 이용*/
+$.session.set("Writer", 0);
+$.session.set("id", "");
+</script>
+
+<body style="background-image:url('img/index6.jpg'); background-repeat: no-repeat">
+    <div class="row" style="margin-top:20%;">
+        <div class="col s4 valign-wrappe">
+            <img src="img/logo3.png" style="margin-left:10px" />
+        </div>
+        <div class="col s8 valign-wrapper">
+            <p id="logo">여행, 가다</p>
+        </div>
+    </div>
+</body>
+
+</html>

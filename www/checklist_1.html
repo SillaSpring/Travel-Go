@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	  html {
+		font-family: GillSans, Calibri, Trebuchet, sans-serif;
+	  }
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+	#logo{
+		font-family:godoMaum;
+		margin-top:0; 
+		color:#ffffff;
+		font-size:80px;
+	}
+   </style>
+   <script>
+	$( document ).ready(function(){
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+		$(".slider").slider({
+			height:140,
+			indicators:false
+		});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		$(".button-collapse").sideNav(); 
+    });
+   </script>
+   
+   <body>
+      <header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+   
+		<div class="card" style="padding-top:0px; margin-top:0px; margin-bottom:0px;" >
+			 <div class="center-align" style="font-size:30px; font-weight:bolder; margin-top:5px; margin-bottom:5px;" >여행자 검역</div>
+			 <div class="card-content" style="padding:0px; margin-top:2px;">
+				<div class="row" >
+				   <div class="col s12"style="margin-bottom:0px;">
+					 <div class="card cyan lighten-5" style="padding:2px; margin-top:0px;">
+					  <div class="card-content black-text">
+						<span class="card-title" style="Heading h5">1.여행자 검역이란</span>
+						 <blockquote style="font-size:17px; margin-bottom:0px;">여행자 검역과 국제공인예방접종증명서(Yellow Card) </blockquote></br>
+						 <p style="margin-top:0px; margin-left:10px;">검역감염병 발생 국가에서 입국한 승객, 승무원
+						 <div style="margin:10px">
+						 아프리카 및 중남미 일부 국가는 황열감염위험지역으로 분류되어 있습니다. 이들 국가를 입국·경유하는 여행자는 입국 10일 전 황열예방접종을 받고 국제공인예방접종증명서(Yellow Card)를 휴대해야 합니다.</br>
+						 일부 국가의 경우 출입국 수속시 이 증명서를 확인하기 때문에 반드시 예방접종을 받고, 이 증명서를 지참하여 해당 국가를 방문하여야 합니다.</br>
+						 예방접종 및 증명서는 국립인천공항검역소 등 전국 15개 검역소에서 받으실 수 있습니다. 본 접종 유효기간은 접종 10일 후부터 약 10년간이며, 이 증명서는 분실시 검역소를 방문하시면 재발급 받을 수 있습니다.</br>
+						 </div>
+						 </p>
+					  </div>
+					  </div>
+				   </div>
+				</div>
+			 </div>
+
+			 <div class="card-content" style="padding:0px; margin-top:2px;">
+				<div class="row" >
+				   <div class="col s12"style="margin-bottom:0px;">
+					 <div class="card cyan lighten-5" style="padding:2px; margin-top:0px;">
+					  <div class="card-content black-text">
+						<span class="card-title" style="Heading h5; margin-bottom:0px;">2.접종 권유 대상 국가<br></span> 
+						<span class="card-title" style="font-size:15px; margin-top:0px; margin-left:16px;">(출처:질병관리본부)<br></span>
+						<blockquote style="font-size:15px; margin-bottom:0px;">아프리카(30)</blockquote></br>
+						<div style="margin-top:0px; margin-left:10px;">
+						<p>가봉·가나·감비아·기니·기니비사우·나이지리아·니제르·라이베리아·르완다·말리·모리타니아·베냉·부르키나파소·부룬디·상투메프린시페·세네갈·소말리아·수단·시에라리온·앙골라·에티오피아·우간다·중앙아프리카공화국·적도기니·카메룬·케냐·탄자니아·토고·콩고·코트디부아르 </br>
+						 예방접종 및 증명서는 국립인천공항검역소 등 전국 15개 검역소에서 받으실 수 있습니다. 본 접종 유효기간은 접종 10일 후부터 약 10년간이며, 이 증명서는 분실시 검역소를 방문하시면 재발급 받을 수 있습니다.</br>
+						 </div>
+						 </p>
+						   <blockquote style="font-size:15px; margin-bottom:0px;">중남미(12)</blockquote></br>
+						 <div style="margin-top:0px; margin-left:10px;">
+						  <p>베네수엘라·볼리비아·브라질·수리남·아르헨티나·에콰도르·콜롬비아·파나마·파라과이·페루·프랑스령 기아나·트리니다드토바고</br>
+						  </div>
+						 </p>
+					  </div>
+					  </div>
+				   </div>
+				   </div>
+			 </div>
+		  </div>
+
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->  
+   
+      
+   </body>
+</html>

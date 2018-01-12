@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	  html {
+		font-family: GillSans, Calibri, Trebuchet, sans-serif;
+	  }
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+	#logo{
+		font-family:godoMaum;
+		margin-top:0; 
+		color:#ffffff;
+		font-size:80px;
+	}
+   </style>
+   <script>
+	$( document ).ready(function(){
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+		$(".slider").slider({
+			height:140,
+			indicators:false
+		});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		$(".button-collapse").sideNav(); 
+    });
+   </script>
+   
+   <body>
+      <header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+   
+		<div class="card" >
+			<div class="center-align" style="font-size:25px; font-weight:bolder; margin-top:20px; margin-bottom:10px" >기내반입금지</div>
+			<div class="card-content" style="; padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h4">※기내반입금지※</span>
+						  <blockquote style="font-size:20px;">액체, 분무, 젤류 기내반입 제한 안내</blockquote>
+						   <p>액체폭탄이 국제적으로 새로운 위협으로 증대되고 있는 가운데, 국제민간항공기구(ICAO)의 권고에 따라, 2007.3.1부터 대한민국 내에 위치한 공항에서 출발하는 모든 국제선 항공편(통과, 환승 포함)에 대하여 액체 • 젤류 및 에어로졸의 항공기 객실 내 휴대반입 제한조치를 실시하고 있습니다.<br>
+							※ICAO 권고 수용국은 ’07.10.10 기준으로 72개국임(참조-www.icao.int)<br>
+							● 통제 대상 품목 - 23종류<br>
+							<div style="margin:10px">
+							- 액체류: 7개종	물 및 드링크류, 스프류, 소스류, 소스/액체류, 음식류, 로션류, 오일류, 향수류<br>
+							- 분무류: 2개종	스프레이류, 탈취제류<br>
+							- 젤 류: 13개종	시럽류, 쨈류, 스튜류, 반죽류, 크림류, 화장품류, 헤어/샤워젤, 면도거품제, 치약류, 액체/고체 혼합류, 마스카라, 립글로스, 립밤<br>
+							- 기 타: 1개종	실온에서 용기 없이는 형상을 유지할 수 없는 물질
+							</div>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-content" style="; padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+							<p>
+							★	항공기 탑승객은 신속한 보안검색을 위하여, 항공기 출발 3시간 전에는 공항에 도착하여 이용하는 항공사 체크인 수속 시 수하물을 위탁 처리하고 여권과 지갑 등 최소한의 필요 물품만을 휴대해야 합니다.<br>
+
+								상기 물품 휴대반입 시, 충족해야 하는 사항<br>
+							<div style="margin:10px">
+							[허용 규격]<br>
+							용기 1개당 100ml이하(=3.4 온스) 로, 1인당 1L 이하 규격의 투명 지퍼락(Zipper lock) 비닐봉투 1개<br>
+							★ 지퍼락 비닐봉투는 공항 내 편의점, 약국, 서점에서 구입 가능)<br>
+
+							[허용 조건]<br>
+							- 투명 지퍼락 봉투(크기: 약20cm×약20cm)에 담겨 지퍼가 잠겨있어야 함.<br>
+							- 보안검색 받기 전 다른 짐과 분리하여 검색요원에게 제시해야 함.</div>
+							</p>
+							<div> <img src='img/수하물가능.png' width="100%" height="50%"> </div>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="card" >
+			<div class="card-content" style="; padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h5">항공기 객실 내 휴대반입 가능 물질</span>
+						  <blockquote style="font-size:20px;">승객 불편 최소화를 위해 항공여행 중 승객이 사용할 분량에 한하여 아래 물품은 허용하며, 1L 투명 지퍼락 비닐봉투에 넣을 필요 없이, 보안 검색 시 진위 여부가 확인되면 직접 휴대하여 객실 내 반입 가능합니다.</blockquote>
+						<li>의사처방전 있는 모든 약품</li>
+						<li>액상 감기약, 액상 위장약, 기침 억제 시럽</li>
+						<li>겔 캅셀약, 비강스프레이, 콘택트렌즈 용제        (보존액)</li>
+						<li>안약, 의료용 식염수, 해열파스</li>
+						<li>의료목적으로 사용되는 얼음(이식용 장기<br>    보관용)</li>
+						<li>혈액 또는 혈액관련 약제, 자폐증 환자용 음료</li>
+						<li>승객의 건강에 꼭 필요한 의사처방전 있는<br>  음식인 젖당, 클루텐 등</li>
+						<li>어린아이 용품 : 우유, 물, 주스, 모유, 액체•겔•<br>     죽 형태의 음식 및 젖어 있는 티슈</li>	
+						</div>
+					 </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card" >
+			<div class="card-content" style="; padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+							<blockquote style="font-size:20px;">면세품의 경우</blockquote>
+							<p>
+							공항 면세점 구입물품 또는 시내 면세점에서 구입 후 공항 면세점에서 전달받은 주류, 화장품 등의 액체류는 면세점에서 제공하는 투명 봉인봉투 또는 국제표준방식으로 제조된 훼손탐지가능 봉투(STEB : Security Tamper Evident Bag)로 포장하고, 면세품 구입 당시 교부받은 영수증이 훼손탐지가능봉투 안에 동봉 또는 부착된 경우에 한하여 용량에 관계없이 반입 가능하며, 최종 목적지행 항공기 탑승 전까지 미개봉 상태를 유지해야 합니다.<br>
+							<br>
+							★ 해외공항 환승 시, 국가별 보안규정이 상이하여 휴대한 액체류 물품에 대하여 포기/ 압수 절차를 따라야 할 경우가 발생할 수 있으므로 사전에 이용 항공사 또는 여행사에 문의<br>
+
+							★ 기내 반입 제한 등에 대한 자세한 사항은 인천 국제공항 (www.airport.kr)의 홈페이지나 인천 국제공항의 ‘보안검색팀(032-741-4736)’을 통해 도움 받으실 수 있습니다.<br>
+							</p>
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+   
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+   </body>
+</html>

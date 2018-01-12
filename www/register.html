@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- firebase -->
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <!-- 인증서비스 -->
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <script type="text/javascript" src="js/session.js"></script>
+</head>
+<style>
+@font-face {
+    font-family: 'godoMaum';
+    src: url('font/godoMaum.ttf') format("truetype");
+}
+
+.brand-logo {
+    font-family: godoMaum;
+}
+
+.medium-small {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0;
+}
+
+.login-form-text {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+.login-text {
+    margin-top: -6px;
+    margin-left: -6px !important;
+}
+
+.margin {
+    margin: 0 !important;
+}
+
+.pointer-events {
+    pointer-events: auto !important;
+}
+
+.input-field>.material-icons {
+    padding-top: 10px;
+}
+
+.input-field div.error {
+    position: relative;
+    top: -1rem;
+    left: 3rem;
+    font-size: 0.8rem;
+    color: #FF4081;
+    -webkit-transform: translateY(0%);
+    -ms-transform: translateY(0%);
+    -o-transform: translateY(0%);
+    transform: translateY(0%);
+}
+</style>
+<script>
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDqGYfsJr91PKULZ7CICbCahoRvs4h3JmE",
+    authDomain: "capstone1214.firebaseapp.com",
+    databaseURL: "https://capstone1214.firebaseio.com",
+    projectId: "capstone1214",
+    storageBucket: "capstone1214.appspot.com",
+    messagingSenderId: "744557786732"
+};
+firebase.initializeApp(config);
+
+var db = firebase.database();
+
+function writeUserData(username, id, password) {
+    $.session.set("Writer", username); // session.set(key값, value값);		
+    var dbuser = db.ref('member/' + id);
+    dbuser.set({
+        username: username,
+        password: password,
+    });
+
+    history.go(-1);
+}
+</script>
+<script>
+$(document).ready(function() {
+    $(".modal").modal();
+    $("#register_bt").click(function() {
+        var username = $("#username").val();
+        var id = $("#id").val();
+        var password = $("#password").val();
+        var pass_ch = $("#password_a").val();
+
+        if (password != pass_ch) {
+            alert("Password does not match the confirm password.");
+            return;
+        }
+        writeUserData(username, id, password);
+    });
+    $(".button-collapse").sideNav();
+}); //document
+</script>
+
+<body>
+    <header>
+        <nav>
+            <!-- nav바 -->
+            <div class="nav-wrapper white">
+                <a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+                <ul class="left">
+                    <li><a href="#" data-activates="slide-out" class="button-collapse" style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+                </ul>
+                <ul class="right">
+                    <li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+                </ul>
+            </div>
+            <!--====================================햄버거버튼===================================-->
+            <ul id="slide-out" class="side-nav">
+                <!-- side-nav바 -->
+                <div>
+                    <img src="img/2.jpg" style="width:300px; height:150px" />
+                </div>
+                <li>
+                    <a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+                </li>
+                <li>
+                    <a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+                </li>
+                <li>
+                    <a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+                </li>
+                <li>
+                    <a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+                </li>
+                <li>
+                    <a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+                </li>
+                <li>
+                    <a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+                </li>
+                <li>
+                    <a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+                </li>
+                <li>
+                    <a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+                </li>
+            </ul>
+            <!-- side-nav바 -->
+        </nav>
+        <!-- nav바 -->
+    </header>
+    <!--================================================ 로그인=====================================-->
+    <div id="login-page" class="row" style="margin:0; padding:0; ">
+        <div class="col s12 z-depth-0 card-panel">
+            <div class="row">
+                <div class="input-field col s12 center">
+                    <h4>회원가입</h4>
+                    <p class="center">저희 커뮤니티에 당장 가입해봐요!</p>
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-social-person-outline prefix"></i> -->
+                    <i class="material-icons prefix">account_circle</i>
+                    <input id="username" name="username" type="text" />
+                    <label for="username">사용자 이름</label>
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-social-person-outline prefix"></i> -->
+                    <i class="material-icons prefix">email</i>
+                    <input id="id" name="id" type="text" style="cursor: auto;" />
+                    <label for="id">아이디</label>
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password" name="password" type="password" />
+                    <label for="password">비밀번호</label>
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="input-field col s12">
+                    <!-- <i class="mdi-action-lock-outline prefix"></i> -->
+                    <i class="material-icons prefix">vpn_key</i>
+                    <input id="password_a" name="cpassword" type="password" />
+                    <label for="password_a">비밀번호 확인</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light col s12" id="register_bt" style="font-size:17px; height:40px">가입하기</button>
+                </div>
+                <div class="input-field col s12">
+                    <p class="margin center medium-small sign-up">이미 회원이신가요? <a href="./login.html">로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

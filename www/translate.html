@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <!-- jQuery -->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase-storage.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="js/session.js"></script>
+</head>
+<style>
+@font-face {
+    font-family: 'godoMaum';
+    src: url('font/godoMaum.ttf') format("truetype");
+}
+
+.brand-logo {
+    font-family: godoMaum;
+}
+</style>
+<script>
+</script>
+<script>
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyDqGYfsJr91PKULZ7CICbCahoRvs4h3JmE",
+    authDomain: "capstone1214.firebaseapp.com",
+    databaseURL: "https://capstone1214.firebaseio.com",
+    projectId: "capstone1214",
+    storageBucket: "capstone1214.appspot.com",
+    messagingSenderId: "744557786732"
+};
+firebase.initializeApp(config);
+
+$(document).ready(function() {
+    var writer = $.session.get("Writer");
+    var id = $.session.get("id");
+    var photoUrl = $.session.get("photoUrl");
+
+    로그인_확인
+    if (writer != 0) {
+        $("#login_icon").text("people");
+    }
+    로그인_확인
+
+    $(".slider").slider({
+        height: 150,
+        indicators: false
+    });
+    $(".button-collapse").sideNav();
+    $(".carousel").carousel();
+    $(".modal").modal(); //추가해야함 이부분 모달
+    $("#login_bt").click(function() {
+        if (writer == 0) {
+            $("#login_bt").attr("href", "login.html")
+        } else {
+            if (id == "null") { //페이스북으로 로그인시
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            } else {
+                $("#login_txt").html("");
+                $("#login_txt").append(
+                    "<h4>" + writer + "</h4>" +
+                    "<p>" + id + "</p>"
+                );
+                $("#login_img").attr("src", photoUrl);
+            }
+
+        }
+    });
+    $("#logout").click(function() {
+        firebase.auth().signOut().then(function() {
+            $.session.set("Writer", 0);
+            // Sign-out successful.
+        }).catch(function(error) {
+            // An error happened.
+        });
+    });
+
+});
+</script>
+<!-- translate -->
+<script type="text/javascript">
+function showIt(response) {
+    if (response.data) {
+        document.getElementById("translation").innerHTML += response.data.translations[0].translatedText;
+        //var str=document.getElementById("translation").innerHTML;
+        //alert(document.getElementById("translation").innerHTML);
+        //document.getElementById("why").value=unescape(replaceAll(str, "\\", "%"));
+    } else
+        alert("Error:" + response.error.message)
+}
+
+function replaceAll(strTemp, strValue1, strValue2) {
+    alert("replaceall")
+    while (1) {
+        if (strTemp.indexOf(strValue1) != -1)
+            strTemp = strTemp.replace(strValue1, strValue2);
+        else
+            break;
+    }
+    return strTemp;
+}
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	/*translate*/
+    $("#btn").click(function() {
+        $("#translation").text("");
+        var text = escape($("#text").val());
+        var key = "AIzaSyAL6vFKAvMSiWFkS2TX9XuVGv8A496ofcU";
+        var source = "en";
+        var dest = "ko";
+        var url = 'https://www.googleapis.com/language/translate/v2?';
+        url += 'key=' + key + '&source=' + source + '&target=' + dest + '&callback=showIt&q=' + text;
+
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+        document.getElementsByTagName('head')[0].appendChild(script);
+    });
+
+});
+</script>
+
+<body>
+    <header>
+        <nav>
+            <!-- nav바 -->
+            <div class="nav-wrapper white">
+                <a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+                <ul class="left">
+                    <li><a href="#" data-activates="slide-out" class="button-collapse" style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+                </ul>
+                <ul class="right">
+                    <li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+                </ul>
+            </div>
+            <!--====================================햄버거버튼===================================-->
+            <ul id="slide-out" class="side-nav">
+                <!-- side-nav바 -->
+                <div>
+                    <img src="img/2.jpg" style="width:300px; height:150px" />
+                </div>
+                <li>
+                    <a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+                </li>
+                <li>
+                    <a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+                </li>
+                <li>
+                    <a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+                </li>
+                <li>
+                    <a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+                </li>
+                <li>
+                    <a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+                </li>
+                <li>
+                    <a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+                </li>
+                <li>
+                    <a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+                </li>
+                <li>
+                    <a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+                </li>
+            </ul>
+            <!-- side-nav바 -->
+        </nav>
+        <!-- nav바 -->
+    </header>
+    <div class="container" style="padding:0px">
+        <div class="valign-wrapper">
+            <i class="large material-icons" style="font-size:30px; margin-top:10px">translate</i>
+            <p style="font-size:20px; font-weight:bolder; margin-top:30px; margin-left:10px">번역하기</p>
+        </div>
+        <div class="row">
+            <div class="input-field col s12" style="height:60px">
+                <textarea id="text" class="materialize-textarea" style=""></textarea>
+                <label for="textarea1">영어</label>
+            </div>
+        </div>
+        <div class="center-align" style="margin:0px ">
+            <i class="large material-icons blue-text" style="margin:0px;">arrow_downward</i>
+        </div>
+        <div class="row" style="margin-left:2px; margin-right:2px">
+            <span style="font-weight:bolder">한국어<span>
+					<div class="input-field col s12" id="translation" style="border:1px solid gray; height:150px">
+					
+					</div>
+				</div>
+				<div class="left-align">
+					<a class="waves-effect waves-light btn blue" id="btn">번역하기</a>
+				</div>
+				<!-- <input type="text" id="why" name="why" /> -->
+		</div>
+		
+      
+		<!--Floatting_button-->
+		<div class="fixed-action-btn horizontal click-to-toggle">
+			<a class="btn-floating btn-large red">
+				<i class="material-icons">add</i>
+			</a>
+			<ul>
+				<li><a class="btn-floating red " href="translate.html"><i class="material-icons">translate</i></a></li>
+				<li><a class="btn-floating yellow darken-1" href="worldmap.html"><i class="material-icons">language</i></a></li>
+				<li><a class="btn-floating green" href="direction.html"><i class="material-icons">navigation</i></a></li>
+				<li><a class="btn-floating blue" href="notice.html"><i class="material-icons">announcement</i></a></li>
+			</ul>
+		</div>
+		<!--Floatting_button-->
+      
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+	  
+       
+	</body>
+</html>

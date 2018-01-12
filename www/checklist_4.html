@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	  html {
+		font-family: GillSans, Calibri, Trebuchet, sans-serif;
+	  }
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+	#logo{
+		font-family:godoMaum;
+		margin-top:0; 
+		color:#ffffff;
+		font-size:80px;
+	}
+   </style>
+   <script>
+	$( document ).ready(function(){
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+		$(".slider").slider({
+			height:140,
+			indicators:false
+		});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		$(".button-collapse").sideNav(); 
+    });
+   </script>
+   
+   <body>
+      <header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+   
+	<div class="card" > 
+		<div class="center-align" style="font-size:25px; font-weight:bolder; margin-top:20px; margin-bottom:10px" >출입국수속</div>
+			<div class="card-content" style="padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h4">출국 수속</span>
+						  <blockquote style="font-size:20px;">출국장 안에서의 출국 수속은 통상적으로 검역, 세관, 출입국 검사의 세 가지 단계로 이루어집니다.</blockquote>
+						   <p>1. 검역<br>
+						   <div style="margin:10px">
+							생략되는 경우도 있지만, 전염병이 발생하는 지역으로 여행하는 경우 예방접종카드를 제출해야 합니다.</div><br>
+						2. 세관<br>
+						<div style="margin:10px">
+						출국할 때 세관 통과는 신고할 내용이 없는 경우에는 그냥 통과해도 되나, 소지 한도액보다 많은 외화나 고가의 외제품을 가지고 나갈 때는 미리 신고해야 합니다.<br>
+						특히 여성의 경우, 고가의 외제 장식류를 신고하지 않고 나갔을 때는 입국 시에 여행 중 구입품으로 취급되어 비싼 관세를 물게 될 수도 있습니다.<br>
+						★ 신고 필요 여부가 확실치 않은 경우에는 세관에 문의) 세관원은 물품을 확인한 후 세관 신고 확인서에 도장을 찍어주는데, 도장을 받은 신고서는 귀국할 때까지 잘 보관하는 것이 좋습니다.</div>
+						3. 출국 심사<br>
+						<div style="margin:10px">
+						출국 심사관에게 여권, 탑승권, 그리고 출입국 신고서를 보이면 심사관은 이 서류들을 검토한 후 여권에 출국 일자와 공항명이 찍힌 스탬프를 찍고 두 장으로 되어 있는 출입국 신고서에서 출국 카드를 떼어낸 다음 입국 카드를 끼워서 돌려 줍니다.<br>
+						되돌려 받은 입국 카드는 귀국 시 입국 수속에 필요하므로 잃어버리지 않도록 주의합니다.<br>
+						★ 주의사항<br>
+						여유 있게 출국 수속 과정을 밟기 위해서는 출발 예정 한 시간 전쯤에는 출국장 안에 들어가 있는 것이 좋습니다. 그러기 위해서는 비행기 이륙시간 2시간 가량 전에는 공항에 도착해서 출국 절차를 밟아야 합니다.
+						</div>
+						</p>
+						</div>
+					 </div>
+					</div>
+				</div>
+			</div>
+		</div> 
+		<div class="card" > 
+			<div class="card-content" style=" padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h4">입국 수속</span>
+						  <blockquote style="font-size:20px;">입국 수속은 통상적으로 검역, 입국 심사, 수하물 회수, 세관 검사의 네 가지 단계로 이루어집니다.</blockquote>
+						   <p>1. 검역<br>
+						   <div style="margin:10px">
+							방문지 공항에 상주하고 있는 검역관에게 소지하고 있는 예방접종 카드를 제시하여 확인 받습니다. (단, 출발지 또는 경유지에서의 전염병 발생 현황에 따라 절차 변경 가능) 출국 전에 국내 검역소에서 예방 접종을 마쳤다면 통상적으로 문제가 없습니다.</div><br>
+						2. 입국 심사<br>
+						<div style="margin:10px">
+						방문지 공항에서는 해당국의 출입국 관리처 담당자에 의해 입국자의 적격 여부가 판정됩니다. 입국자의 여권, 비자에 기재된 정보, 그리고 기내에서 작성한 입국신고서를 기초로 하여 국적, 여행목적, 체재기간, 숙박 장소 등을 묻게 되는데, 최대한 간결하고 분명하게 응답하는 것이 신속한 통과의 요령입니다.<br>
+						★ 신고 필요 여부가 확실치 않은 경우에는 세관에 문의) 세관원은 물품을 확인한 후 세관 신고 확인서에 도장을 찍어주는데, 도장을 받은 신고서는 귀국할 때까지 잘 보관하는 것이 좋습니다.<br>
+						※ 입국 심사를 통해 본인의 여권에 도장을 찍고 나면 그와 동시에 여행자는 해당 방문국의 법 관할권에 속하게 됩니다.</div>
+						3. 수하물 회수<br>
+						<div style="margin:10px">
+						입국 절차를 마친 후, 자신이 이용한 항공편의 이름이 적힌 수하물 회수대로 가서 기다립니다. 빠르면 5분, 늦으면 30분 가량 후에 자신의 짐이 컨베이어 벨트로 운반되어 나오면 찾으실 수 있습니다.<br>
+						※ 대부분의 캐리어들이 유사한 색상과 디자인을 가지고 있으므로 자신의 수하물을 쉽게 찾기 위해서 출국 전에 미리 꼬리표나 손수건, 벨트 등 눈에 잘 띄는 표지를 해두는 것이 도움이 됩니다.<br>
+						</div>
+						4. 세관 검사<br>
+						<div style="margin:10px">
+						출국 때와 마찬가지의 절차로, 세관 검사대 앞에 도달하면 우선 여권과 세관신고서를 제출합니다. 때에 따라서 별다른 검사를 하지 않고 통과되는 경우도 있지만, 신속한 통관을 위해서는 미리 가방 속의 소지품을 보여줄 준비를 하는 것이 바람직합니다. 까다로운 세관원의 경우, 값이 나가 보이는 의류나 개인용 전자제품을 확인하기도 하지만 신변 용품인 이상 특별히 문제가 되지는 않습니다.<br>
+							★ 주의사항<br>
+						동 입국 과정에서 문제가 발생해 구류가 되거나, 언어 차이로 인해 의사소통이 어려워 오해가 생길 경우, 영사콜센터에 연락해 안내를 받고, 필요시 영, 중, 일 통역서비스도 지원받을 수 있습니다.</div>
+						</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div> 
+		
+		
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+      
+   </body>
+</html>

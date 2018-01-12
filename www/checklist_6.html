@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <!-- jQuery -->
+       <script src="http://code.jquery.com/jquery-2.0.1.min.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script> 
+      <!-- icon -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+   </head>
+   <style>
+	  html {
+		font-family: GillSans, Calibri, Trebuchet, sans-serif;
+	  }
+	@font-face{
+		font-family:'godoMaum';
+		src:url('font/godoMaum.ttf') format("truetype");
+	}
+	.brand-logo{
+		font-family:godoMaum;
+	}
+	#logo{
+		font-family:godoMaum;
+		margin-top:0; 
+		color:#ffffff;
+		font-size:80px;
+	}
+   </style>
+   <script>
+	$( document ).ready(function(){
+		var writer = $.session.get("Writer");
+		var id = $.session.get("id");
+		var photoUrl = $.session.get("photoUrl");
+		<!-- 로그인_확인 -->
+		if(writer != 0 ){
+			$("#login_icon").text("people");	
+		}
+		<!-- 로그인_확인 -->
+		
+		$(".slider").slider({
+			height:140,
+			indicators:false
+		});
+		$("#login_bt").click(function(){
+			if(writer == 0 ){
+				$("#login_bt").attr("href","login.html")
+			}else{
+				if(id == "null"){ //페이스북으로 로그인시
+					$("#login_txt").html("");
+					$("#login_txt").append(
+					"<h4>"+writer+"</h4>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}else{
+					$("#login_txt").html("");
+					$("#login_txt").append(
+						"<h4>"+writer+"</h4>"+
+						"<p>"+id+"</p>"
+					);
+					$("#login_img").attr("src",photoUrl);
+				}
+				
+			}
+		});
+		$("#logout").click(function(){
+			firebase.auth().signOut().then(function() {
+				$.session.set("Writer",0);
+			  // Sign-out successful.
+			}).catch(function(error) {
+			  // An error happened.
+			});
+		});
+		$(".button-collapse").sideNav(); 
+    });
+   </script>
+   
+   <body>
+      <header>
+			<nav> <!-- nav바 -->
+				<div class="nav-wrapper white">
+					<a href="main.html" class="brand-logo center blue-text text-darken-2" style="font-size:55px;">여행, 가다</a>
+					<ul class="left">
+						<li><a href="#" data-activates="slide-out" class="button-collapse"style="margin:0px;"><i class="material-icons blue-text text-darken-2">menu</i></a></li>
+					</ul>
+					<ul class="right">
+						<li><a id="login_bt" href="#login_modal" class="modal-trigger"><i class="material-icons blue-text text-darken-2" id="login_icon">people_outline</i></a></li>
+					</ul>
+				</div>
+			 
+				<!--====================================햄버거버튼===================================-->
+				<ul id="slide-out" class="side-nav"> <!-- side-nav바 -->
+					<div>
+						<img src="img/2.jpg" style="width:300px; height:150px" />
+					</div>
+					<li>
+						<a href="checklist_1.html"><i class="material-icons">done</i>여행자 검역</a>
+					</li>
+					<li>
+						<a href="checklist_2.html"><i class="material-icons">done</i>의약 용품</a>
+					</li>
+					<li>
+						<a href="checklist_3.html"><i class="material-icons">done</i>비행 금지 품목</a>
+					</li>
+					<li>
+						<a href="checklist_4.html"><i class="material-icons">done</i>출입국 수속</a>
+					</li>
+					<li>
+						<a href="checklist_5.html"><i class="material-icons">done</i>택스리펀드</a>
+					</li>
+					<li>
+						<a href="checklist_6.html"><i class="material-icons">done</i>비자</a>
+					</li>
+					<li>
+						<a href="checklist_7.html"><i class="material-icons">done</i>도난 / 인질</a>
+					</li>
+					<li>
+						<a href="checklist_8.html"><i class="material-icons">done</i>전쟁 / 총격 </a>
+					</li>
+				</ul> <!-- side-nav바 -->
+			</nav> <!-- nav바 -->   
+		</header>
+   
+		<div class="card" >
+			<div class="center-align" style="font-size:25px; font-weight:bolder; margin-top:20px; margin-bottom:10px" >비자</div>
+			<div class="card-content" style="padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h4">여권</span>
+						  <blockquote style="font-size:20px;">여권의 쓰임새</blockquote>
+						  <div style="margin:10px">
+							△ 환전할 때<br>
+							△ 비자 신청·발급받을 때<br>
+							△ 출국 수속 및 항공기 탑승할 때<br>							
+							△ 현지 입국과 귀국 수속 때	<br>					
+							△ 면세상품을 구입할 때	<br>					
+							△ 국제운전면허증을 만들 때		<br>					
+							△ 여행자수표로 지불할 때	<br>					
+							△ 여행자 수표를 도난당하거나 분실 신고할 때	<br>					
+							△ 병역의무자가 병무 신고 및 귀국 신고할 때	<br>						
+							△ 해외에서 한국으로부터 송금된 돈을 찾을 때 등
+							</div>
+						</div>
+					 </div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="card-content" style="padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+
+						  <blockquote style="font-size:20px;">여권의 권리</blockquote>
+						  <div style="margin:10px">
+								1) 해외에서 여권은 본인의 신분을 증명하는 유일한 신분증명서로, 분실 시 악용의 소지가 있으며, 그로 인한 모든 피해를 본인이 감수할 수 있으므로 철저히 보관합니다.<br>	
+								2) 여권은 받는 즉시 서명란(3번째 쪽)에 반드시 자필 서명을 하며, 분실 등에 대비하여 맨 뒷면의 ‘소지인 연락처’를 작성합니다.<br>	
+							
+								3) 분실 신고된 여권상의 사증을 재사용코자 할 경우에는 사증 발급 국가의 기관의 사전 확인이 필요합니다.<br>	
+							
+								4) 타인의 여권을 습득하였을 경우 가까운 재외공관이나 경찰서에 맡깁니다.<br>	
+
+								3. 여권을 분실했을 때 조치사항<br>	
+
+								★ 현지 인근 경찰서에서 Police Report(여권 분실증명서) 발급 또는 (대사관 또는 총영사관이 가까이 있을 경우) 여권 분실을 신고하면서 여행증명서나 단수여권 그리고 입국 증명서를 함께 발급
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="card" >
+			<div class="card-content" style="padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h4">비자</span>
+						  <blockquote style="font-size:20px;">비자란?!</blockquote>
+						  <div style="margin:10px">
+							세계 각국이 자국법으로 그 사무를 규정하고 있는 비자(사증)는 외국인에 대한 출입국 허가의 증명을 말합니다.<br>
+							(한국에서 비자 발급을 담당하는 기관은 방문 국가의 주한 대사관입니다.)	<br>
+							★ 비자의 기능	<br>
+							△ 여권이 정식으로 발행된 것이며 유효한<span style="margin:15px"> 여권임을 증명</span><br>
+							△ 해당 여권 소지자를 안전하게 자기 나라에 <span style="margin:15px">입국시키도록 본국 관리에게 추천하는</br></span><span style="margin:15px">기능</span>
+							</div>
+							<blockquote style="font-size:20px;">비자의 종류</blockquote>
+						  <div style="margin:10px">
+							비자는 방문 목적, 체제 기간, 사용 횟수에 따라 다음과 같이 분류합니다<br>
+							△ 방문목적 : 관광비자, 학생비자, 방문비자, <span style="margin:16px">주재원비자, 경유비자, 이민비자, 문화공연</br><span style="margin:15px">비자 등</span></span><br>
+							△ 체류기간: 영주비자, 임시비자<br>
+							△ 사용횟수: 단수비자, 복수비자
+							</div>
+						</div>
+					 </div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="card-content" style="padding-top:0px;">
+				<div class="row">
+					<div class="col s12 ">
+					  <div class="card cyan lighten-5">
+						<div class="card-content black-text">
+						  <span class="card-title" style="Heading h4">비자</span>
+						  <blockquote style="font-size:20px;">무비자 입국</blockquote>
+						  <div style="margin:10px">
+							국가간 이동을 위해서는 원칙적으로 방문국의 사증(입국 허가)이 필요하나 관광, 친지 방문 등 단기간의 체류 목적에 한해 무사증 입국이 허용되기도 합니다.<br>
+							2012.8월 현재 협정에 의해 우리나라 여권으로 무사증 입국이 가능한 국가는 독일, 프랑스, 이스라엘, 태국, 튀니지 등 63개국이 있고 일방 혹은 상호주의에 의해 입국이 가능한 국가는 53개 국가입니다.( www.0404.go.kr 참고)<br>
+							★ 비자의 기능	<br>
+							△ 체류기간: 영주비자, 임시비자<br>
+							△ 사용횟수: 단수비자, 복수비자
+							</div>
+							<blockquote style="font-size:20px;">비자 관련 유의사항</blockquote>
+						  <div style="margin:10px">
+							1. 비자를 목적과 기간에 맞지 않게 쓰게 될<span style="margin:15px">경우, 외국의 출입국 심사관은 해당인을 <span style="margin:15px">불법체류자 또는 밀수입업자 등으로 오인 <span style="margin:15px">할 수 있습니다.</span></span></span><br>
+							2. 특히 6개월 이하 단기 학생비자의 경우, <span style="margin:15px">관광비자와 거의 같은 수준으로 처리되기 <span style="margin:15px">때문에 비자 기간이 조금 남아 있다고 하더</br><span style="margin:15px">라도 재입국시 입국심사가 굉장히 까다<br><span style="margin:15px">로울 수 있고, 불법적으로 비자를 연장 <br><span style="margin:15px">하려는 의도가 있다고 판단하여 입국을<br> <span style="margin:15px">거부할 가능성도 있습니다.</span></span></span></span></span></span><br>
+							<span style="margin:15px">따라서 여행 전에 미리 본인이 소지한 비자<br><span style="margin:15px">의 잔여기간을 확인하시기 바랍니다.</span></span><br>
+							3. 비자에 관한 사항은 그 국가의 고유권한<br><span style="margin:15px">으로 여겨지고 있기 때문에, 입국심사대<br><span style="margin:15px">에서 출입국심사관의 질문에 대하여 정확<br></span><span style="margin:15px">히 답변을 하고 입국 목적 및 여행 일정을 </span><span style="margin:15px">명확히 설명하는 것이 매우 중요합니다.</span></br>
+							4. 외교부의 www.passport.go.kr(동 사이트 <br><span style="margin:15px">우상단 ‘비자’ 클릭)로 가시면 더 많은 <br><span style="margin:15px">정보를 얻으실 수 있습니다.</span></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+		
+		<!-- login_modal -->
+		<div id="login_modal" class="modal">
+			<div class="modal-content" style="padding:0px;">
+				<div class="row valign-wrapper">
+					<div class="col s8 center-align" style="margin-top:30px; padding:0px;" id="login_txt"></div>
+					<div class="col s4 center-align" style="margin-top:20px; padding:0px;">
+						<img src="" id="login_img" style="height:75px;"/>
+						<!-- <i class="material-icons" style="font-size:100px">person</i> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer" style="padding:0px;">
+				<div class="row" style="margin:0px;">
+					<div class="col s6 left-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2 left-align" id="logout">로그아웃</a>
+					</div>
+					<div class="col s6 right-align">
+						<a href="" class="modal-action modal-close waves-effect waves-green btn-flat blue-text text-darken-2">닫기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- login_modal -->
+      
+   </body>
+</html>
